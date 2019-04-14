@@ -1,5 +1,7 @@
 <?php
 
+use function MongoDB\BSON\fromPHP;
+
 function checkType($type, $value) {
     switch ($type) {
         case JSON_STRING:
@@ -8,6 +10,8 @@ function checkType($type, $value) {
             return is_numeric($value);
         case JSON_ARRAY:
             return is_array($value);
+        case JSON_BOOLEAN:
+            return is_bool($value);
         default:
             return false;
     }
@@ -24,4 +28,8 @@ function checkFields($fields, $data): bool {
 
 function bsonToJson($bson): string {
     return MongoDB\BSON\toJSON(MongoDB\BSON\fromPHP($bson));
+}
+
+function bsonToJsonArray($bsonArray) {
+    return json_encode($bsonArray);
 }

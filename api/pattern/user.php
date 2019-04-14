@@ -4,6 +4,9 @@ define("VOLUNTEER", 0);
 define("MERCHANT", 1);
 define("INDIVIDUAL", 2);
 
+define("NORMAL", 0);
+define("ADMIN", 1);
+
 class UserPattern {
 
     private static $REQUIRED_LOGIN_FIELDS = [
@@ -53,7 +56,8 @@ class UserPattern {
             'location' => [
                 'type' => 'Point',
                 'coordinates' => $input['location']
-            ]
+            ],
+            'permission' => 0
         ]);
     }
 
@@ -61,11 +65,11 @@ class UserPattern {
         return !$collection->findOne(['email' => $email], ['projection' => ['_id' => 1]]);
     }
 
-    public static function getLocation($collection, $_id) {
+    public static function getSingleField($collection, $_id, $field) {
         return $collection->findOne(['_id' => $_id], ['projection' => [
             '_id' => 0,
-            'location' => 1
-        ]])['location'];
+            $field => 1
+        ]])[$field];
     }
 
 }
