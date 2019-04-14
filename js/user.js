@@ -29,9 +29,7 @@ function onLogin(data) {
     alert(" Login ");
     user = JSON.parse(data);
 
-    if (!isUserLogged()) {
-        window.localStorage.setItem('user', data);
-    }
+    window.localStorage.setItem('user', data);
 
     alert("Sucessfull Login ");
     window.location = "../dashboard";
@@ -52,21 +50,17 @@ function onLoginFailed(statusCode) {
 }
 
 function isUserLogged() {
-    return window.localStorage.getItem('user') != null;
+    if( window.localStorage.getItem('user') != null ){
+        if( !user ){
+            user = JSON.parse(window.localStorage.getItem('user'));
+        }
+        return true;
+    }
+    return false;   
 }
 
 function getUserInfo(field) {
-    if (!user)
-        userRestore();
     return user[field];
-}
-
-function userRestore() {
-    if (isUserLogged()) {
-        return user = JSON.parse(window.localStorage.getItem('user'));
-    }
-
-    return false;
 }
 
 function userDisconnect() {

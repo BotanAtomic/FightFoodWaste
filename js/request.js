@@ -25,6 +25,7 @@ function doRequest(api,method,data, onSuccess, onError)
     xhr.send(data);
 }
 
+/***********************************User Request******************************************* */
 
 function loginRequest(email,password,callback,error)
 {
@@ -36,7 +37,19 @@ function registerRequest(name,forename,email,type,password,callback,error)
     doRequest("user/register/","POST",{ email, password, name, forename, type },callback,error);
 }
 
-// doRequest("user/login/", "POST", {"email": "ahmed.botan94@gmail.com", "password": "123456"},test);
+/**************************************************************************************** */
 
-// doRequest(, "POST", {"email": "paulbenabou@gmail.com", "password": "123456", "name" : "Paul", "forename" : "Benabou", "type":1 },test);
+
+/***********************************Packages Request******************************************* */
+
+function createPackageRequest(token,package,callback,error){
+    doRequest("delivery/create/", "POST", {token, package} ,callback, error );
+}
+
+function getPackageRequest(token,all,status,callback,error){
+    doRequest("delivery/get/", "POST", {token,all,status} ,callback, error );
+}
+
+
+/**************************************************************************************** */
 
