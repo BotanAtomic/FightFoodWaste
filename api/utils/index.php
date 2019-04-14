@@ -1,8 +1,21 @@
 <?php
 
+function checkType($type, $value) {
+    switch ($type) {
+        case JSON_STRING:
+            return is_string($value);
+        case JSON_NUMBER:
+            return is_numeric($value);
+        case JSON_ARRAY:
+            return is_array($value);
+        default:
+            return false;
+    }
+}
+
 function checkFields($fields, $data): bool {
-    foreach ($fields as $field) {
-        if (!isset($data[$field])) {
+    foreach ($fields as $field => $type) {
+        if (!isset($data[$field]) || !checkType($type, $data[$field])) {
             return false;
         }
     }

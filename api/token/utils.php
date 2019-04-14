@@ -10,7 +10,7 @@ function getIdByToken($token) {
     return new MongoDB\BSON\ObjectId(substr($token, 10));
 }
 
-function isValidToken($token): bool {
+function isValidToken($token) {
     try {
         $collection = (new MongoDB\Client)->ffw->users;
         $_id = getIdByToken($token);
@@ -18,6 +18,6 @@ function isValidToken($token): bool {
             '$gte' => new MongoDB\BSON\UTCDateTime()
         ]], ['projection' => ['_id' => 1]]);
     } finally {
-        return isset($result);
+        return isset($result) ? $_id : false;
     }
 }
