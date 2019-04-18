@@ -9,3 +9,13 @@
     margin-right: auto;
     max-width: 50%;
 }
+
+.map
+{
+    height:150px;
+}
+
+a.link_button:link 
+{
+    text-decoration:none; 
+}

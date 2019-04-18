@@ -2,13 +2,10 @@ function checkTopButton() {
     if(isUserLogged()) {
         $("#top-button").html(`Bonjour ${getUserInfo('forename')}`);
         $("#top-button").attr('href', '');
-
-        let disconnectButton = $('<button/>',
-        {
-            text: 'Disconnect',
-            click: userDisconnect()
-        });
-        
+        $("#disconnect-button").show();
+    }
+    else{
+        $("#disconnect-button").hide();
     }
 } 
 
