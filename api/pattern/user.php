@@ -72,4 +72,8 @@ class UserPattern {
         ]])[$field];
     }
 
+    public static function get($collection, $_id) {
+        return $collection->findOne(['_id' => $_id]);
+    }
+
 }

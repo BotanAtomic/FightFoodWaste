@@ -9,11 +9,10 @@ require_once "../../pattern/index.php";
 
 $input = json_decode(file_get_contents('php://input'), TRUE);
 
-if (!DeliveryPattern::isValidGetInput($input)) {
+if (!DeliveryPattern::isValidUpdateInput($input)) {
     http_response_code(404);
     return;
 }
-
 
 if (!($_id = isValidToken($input['token']))) {
     http_response_code(401);
@@ -21,20 +20,13 @@ if (!($_id = isValidToken($input['token']))) {
 }
 
 $client = (new MongoDB\Client)->ffw;
+$package = DeliveryPattern::getById($client->deliveries, $input['delivery']);
+$permission = UserPattern::getSingleField($client->users, $_id, 'permission');
 
-if ($input['all']) {
-    $permission = UserPattern::getSingleField($client->users, $_id, 'permission');
-
-    if ($permission != ADMIN) {
-        http_response_code(401);
-        return;
-    }
+if ($permission != ADMIN && $package->user->root != $_id) {
+    http_response_code(401);
+    return;
 }
 
-echo DeliveryPattern::formatMultiple(
-    DeliveryPattern::get($client->deliveries, $_id, $input['all'], $input['status']), $client
-);
-
-
-
+DeliveryPattern::updateStatus($client->deliveries, $input['delivery'], $input['status']);
 
