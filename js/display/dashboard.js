@@ -4,7 +4,7 @@ function onPackageSuccess(data) {
     list = JSON.parse(data);
 
     if (list)
-        fillTable();
+        fillTable(false);
 }
 
 function onPackageFailed(errorCode) {
@@ -12,8 +12,7 @@ function onPackageFailed(errorCode) {
 }
 
 function onPackageUpdateSuccess(data, id, status) {
-    console.log(data,id,status);
-    updateTableElement();
+    updateTableElement(id,"status",status);
 }
 
 function onPackageUpdateFailed(errorCode) {
@@ -30,30 +29,32 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-function toggleMenu() {
-    
-}
-
 function updatePackage(status, id) {
     updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
 }
 
-function updateTableElement(id,status){
-    // Clear current table
-    $("#table_dashboard").find("tbody").empty();
+function updateTableElement(id,fields,value){
+    console.table(id,fields,value);
 
     // Update element status
     list.forEach(package => {
-        if(package._id === id){
-            package.status = status;
+        console.log(package);
+        if(package._id == id){
+            package[fields] = value;
         }
     });
 
     // Redraw table
-    fillTable();
+    fillTable(true);
 }
 
-function fillTable() {
+function fillTable(clear) {
+
+    if(clear){
+        // Clear current table
+        $("#table_dashboard").find("tbody").empty();
+    }
+
     let counter = list.length;
 
     list.forEach(package => {
@@ -66,19 +67,31 @@ function fillTable() {
         let status = STATUS[package.status];
 
         const tbody = $("#table_dashboard").find("tbody");
-        tbody.append("<tr>");
-        tbody.append(`<th scope='row'>${counter}</th>`);
-        tbody.append(`<td>${dateobj}</td> `);
-        tbody.append(`<td>${userName}</td>`);
-        tbody.append(`<td> <span style='background-color:${status.color}' class='status'> ${status.name} </span> </td> `);
+        const tr = $("<tr></tr>");
+
+        tr.append(`<th scope='row'>${counter}</th>`);
+        tr.append(`<td>${dateobj}</td> `);
+        tr.append(`<td>${userName}</td>`);
+        tr.append(`<td> <span style='background-color:${status.color}' class='status'> ${status.name} </span> </td> `);
 
         const actionTd = $("<td></td>");
-        actionTd.append(`<a style='color:red' onclick='updatePackage(4,"${packageId}")' href='#' class='link_button fas fa-ban '> </a>`);
-        actionTd.append(`<a onclick='updatePackage(${package.status + 1},"${packageId}" )' href='#' class='link_button fas fa-forward '> </a>`);
-        actionTd.append(`<a style='color:grey' onclick='' href='#' class='link_button fas fa-plus-square '> </a>`);
+        status.id < 3 && actionTd.append(`<a style='color:red' onclick='updatePackage(4,"${packageId}")' href='#' class='link_button fas fa-ban '> </a>`);
+        status.id < 3 && actionTd.append(`<a onclick='updatePackage(${package.status + 1},"${packageId}" )' href='#' class='link_button fas fa-forward '> </a>`);
+        actionTd.append(`<a style='color:grey' onclick='updateTableElement("${packageId}","open",${!package.open});' href='#' class='link_button fas fa-plus-square '> </a>`);
 
-        tbody.append(actionTd);
-        tbody.append("</tr>");
+        tr.append(actionTd);
+        tbody.append(tr);
+
+        if (package.open){
+            tbody.append(`<td  colspan='5'> 
+                            <div class='table-menu'>
+                                <div class='map' id='map_${counter}'> </div>
+                                <div>  test </div>
+                             </div>
+                        </td>`);
+
+            addMap("map_"+counter,location);
+        }
 
         counter--;
     });

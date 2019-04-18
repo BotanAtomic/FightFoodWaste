@@ -12,7 +12,8 @@
 
 .map
 {
-    height:150px;
+    width: 50%;
+    height: 250px;
 }
 
 a.link_button:link 
@@ -27,4 +28,14 @@ a.link_button:link
     color: white;
     padding:2.5px 30px;
     border-radius: 10px;
+}
+
+.table-menu
+{
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: stretch;
+    align-content: stretch;
+    width: 100%;
 }
