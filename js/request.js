@@ -1,5 +1,4 @@
-
-function doRequest(api,method,data, onSuccess, onError)
+function doRequest(api,method,data, onSuccess, onError, ...args)
 {
     var xhr = new XMLHttpRequest();
     var url = "http://51.75.203.112/api/";
@@ -12,7 +11,7 @@ function doRequest(api,method,data, onSuccess, onError)
         {
             if(xhr.status === 200)
             {
-                onSuccess(xhr.responseText);
+                onSuccess(xhr.responseText, ...args);
             }    
             else
             {
@@ -50,6 +49,9 @@ function getPackageRequest(token,all,status,callback,error){
     doRequest("delivery/get/", "POST", {token,all,status} ,callback, error );
 }
 
+function updatePackageRequest(token,delivery,status,callback,error){
+    doRequest("delivery/update/","POST",{token,delivery,status},callback,error,delivery,status)
+}
 
 /**************************************************************************************** */
 

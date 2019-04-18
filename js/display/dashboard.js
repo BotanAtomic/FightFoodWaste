@@ -1,5 +1,4 @@
 let list = null;
-let command_status = ["TO_PROGRAM", "TAKEN", "IN_PROGRESS", "DONE", "CANCELED"];
 
 function onPackageSuccess(data) {
     list = JSON.parse(data);
@@ -12,6 +11,15 @@ function onPackageFailed(errorCode) {
     alert("Error getting package failed : " + errorCode);
 }
 
+function onPackageUpdateSuccess(data, id, status) {
+    console.log(data,id,status);
+    updateTableElement();
+}
+
+function onPackageUpdateFailed(errorCode) {
+    alert("Update package failed : " + errorCode);
+}
+
 function addMap(mapID, location) {
     macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
@@ -22,57 +30,57 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-function addAction(actionID) {
-    $("#" + actionID).append("<a id='a-1_" + actionID + "'></a>");
-    $("#a-1_" + actionID).attr({
-        style: "color:red;margin-right :10px",
-        href: "#",
-        onclick: "alert('test')"
-    })
-        .addClass("link_button fas fa-ban fa-2x");
+function toggleMenu() {
+    
+}
 
-    $("#" + actionID).append("<a id='a-2_" + actionID + "'></a>");
-    $("#a-2_" + actionID).attr({
-        style: "margin-right :10px",
-        href: "#",
-        onclick: "alert('test2')"
-    })
-        .addClass("link_button fas fa-forward fa-2x");
+function updatePackage(status, id) {
+    updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
+}
 
+function updateTableElement(id,status){
+    // Clear current table
+    $("#table_dashboard").find("tbody").empty();
 
-    $("#" + actionID).append("<a id='a-3_" + actionID + "'></a>");
-    $("#a-3_" + actionID).attr({
-        href: "#",
-        onclick: "alert('test3')"
-    })
-        .addClass("link_button fas fa-plus-square fa-2x");
+    // Update element status
+    list.forEach(package => {
+        if(package._id === id){
+            package.status = status;
+        }
+    });
 
+    // Redraw table
+    fillTable();
 }
 
 function fillTable() {
-    let counter = 0;
+    let counter = list.length;
+
     list.forEach(package => {
         console.log(package);
+        let packageId = package._id;
         let dateobj = new Date(+package.date.creation).toLocaleDateString('fr-FR', { timeZone: 'UTC' });
         let userName = package.user["root.name"];
         let packageList = package.package;
         let location = package.location;
-        let status = command_status[package.status];
+        let status = STATUS[package.status];
 
-        $("#table_dashboard").find("tbody").after("<tr>" +
-            "<th scope='row'>" + counter + "  </th>" +
-            "<td>" + dateobj + "</td> " +
-            "<td>" + userName + "</td> " +
-            "<td class='fas fa-archive fa-2x '></td> " +
-            "<td id='map_" + counter + "' class='map'></td> " +
-            "<td>" + status + "</td> " +
-            "<td id='action_" + counter + "'></td> "
-        );
+        const tbody = $("#table_dashboard").find("tbody");
+        tbody.append("<tr>");
+        tbody.append(`<th scope='row'>${counter}</th>`);
+        tbody.append(`<td>${dateobj}</td> `);
+        tbody.append(`<td>${userName}</td>`);
+        tbody.append(`<td> <span style='background-color:${status.color}' class='status'> ${status.name} </span> </td> `);
 
-        addAction("action_" + counter);
-        addMap("map_" + counter, location);
+        const actionTd = $("<td></td>");
+        actionTd.append(`<a style='color:red' onclick='updatePackage(4,"${packageId}")' href='#' class='link_button fas fa-ban '> </a>`);
+        actionTd.append(`<a onclick='updatePackage(${package.status + 1},"${packageId}" )' href='#' class='link_button fas fa-forward '> </a>`);
+        actionTd.append(`<a style='color:grey' onclick='' href='#' class='link_button fas fa-plus-square '> </a>`);
 
-        counter++;
+        tbody.append(actionTd);
+        tbody.append("</tr>");
+
+        counter--;
     });
 }
 

@@ -17,5 +17,14 @@
 
 a.link_button:link 
 {
-    text-decoration:none; 
+    text-decoration:none;
+    margin: auto 10px; 
+}
+
+.status
+{
+    align-content:center;
+    color: white;
+    padding:2.5px 30px;
+    border-radius: 10px;
 }
