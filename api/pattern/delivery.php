@@ -34,15 +34,15 @@ class DeliveryPattern {
     public static function create($client, $input, $_id) {
         $client->deliveries->insertOne([
             'date' => [
-                'delivered' => new MongoDB\BSON\UTCDateTime()
+                'creation' => new MongoDB\BSON\UTCDateTime()
             ],
             'user' => [
-                'client' => $_id
+                'root' => $_id
             ],
             'package' => $input['package'],
             'location' => UserPattern::getSingleField($client->users, $_id, 'location'),
             'status' => TO_PROGRAM,
-            'getBack' => true
+            'reception' => true
         ]);
     }
 
@@ -52,8 +52,36 @@ class DeliveryPattern {
         if (!$all)
             $params['user.client'] = $_id;
 
-        $cursor= $collection->find($params);
+        $cursor = $collection->find($params);
 
         return $cursor->toArray();
     }
+
+    public static function format($data) {
+        $base = [
+            '_id' => $data['_id']->__toString(),
+            'package' => $data['package'],
+            'date' => [
+                'creation' => $data['date']['creation']->__toString(),
+            ],
+            'user' => [
+                'root' => $data['user']['root']->__toString(),
+            ],
+            'status' => $data['status'],
+            'location' => $data['location']['coordinates']
+        ];
+
+        return $base;
+    }
+
+    public static function formatMultiple($entities) {
+        $array = [];
+
+        foreach ($entities as $entity) {
+            array_push($array, self::format($entity));
+        }
+
+        return json_encode($array);
+    }
+
 }

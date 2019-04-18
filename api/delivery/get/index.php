@@ -31,7 +31,9 @@ if ($input['all']) {
     }
 }
 
-echo bsonToJsonArray(DeliveryPattern::get($client->deliveries, $_id, $input['all'], $input['status']));
+echo DeliveryPattern::formatMultiple(
+    DeliveryPattern::get($client->deliveries, $_id, $input['all'], $input['status'])
+);
 
 
 

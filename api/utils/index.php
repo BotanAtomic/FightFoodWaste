@@ -29,7 +29,3 @@ function checkFields($fields, $data): bool {
 function bsonToJson($bson): string {
     return MongoDB\BSON\toJSON(MongoDB\BSON\fromPHP($bson));
 }
-
-function bsonToJsonArray($bsonArray) {
-    return json_encode($bsonArray);
-}
