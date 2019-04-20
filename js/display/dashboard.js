@@ -22,6 +22,7 @@ function onPackageUpdateFailed(errorCode) {
 function addMap(mapID, location) {
     macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
+    L.marker([location[0],location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: '',
         minZoom: 1,
@@ -29,16 +30,27 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
+function addPackageList(id,package)
+{
+    const tBody = $("#"+id)
+    package.forEach(package => {
+        const tr = $("<tr></tr>");
+
+        tr.append(`<th scope='row'>Quantite</th>`);
+        tr.append(`<td> product name ${package}</td> `);
+        tr.append(`<td> Lien openfood </td>`);
+
+        tBody.append(tr);
+    })
+}
+
 function updatePackage(status, id) {
     updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
 }
 
 function updateTableElement(id,fields,value){
-    console.table(id,fields,value);
-
     // Update element status
     list.forEach(package => {
-        console.log(package);
         if(package._id == id){
             package[fields] = value;
         }
@@ -58,7 +70,6 @@ function fillTable(clear) {
     let counter = list.length;
 
     list.forEach(package => {
-        console.log(package);
         let packageId = package._id;
         let dateobj = new Date(+package.date.creation).toLocaleDateString('fr-FR', { timeZone: 'UTC' });
         let userName = package.user["root.name"];
@@ -66,7 +77,7 @@ function fillTable(clear) {
         let location = package.location;
         let status = STATUS[package.status];
 
-        const tbody = $("#table_dashboard").find("tbody");
+        const tbody = $("#table_dashboard").find("tbody:first");
         const tr = $("<tr></tr>");
 
         tr.append(`<th scope='row'>${counter}</th>`);
@@ -77,7 +88,8 @@ function fillTable(clear) {
         const actionTd = $("<td></td>");
         status.id < 3 && actionTd.append(`<a style='color:red' onclick='updatePackage(4,"${packageId}")' href='#' class='link_button fas fa-ban '> </a>`);
         status.id < 3 && actionTd.append(`<a onclick='updatePackage(${package.status + 1},"${packageId}" )' href='#' class='link_button fas fa-forward '> </a>`);
-        actionTd.append(`<a style='color:grey' onclick='updateTableElement("${packageId}","open",${!package.open});' href='#' class='link_button fas fa-plus-square '> </a>`);
+        !package.open && actionTd.append(`<a style='color:grey' onclick='updateTableElement("${packageId}","open",${!package.open});' href='#' class='link_button fas fa-plus-square '> </a>`);
+        package.open && actionTd.append(`<a style='color:red' onclick='updateTableElement("${packageId}","open",${!package.open});' href='#' class='link_button fas fa-minus-square '> </a>`);
 
         tr.append(actionTd);
         tbody.append(tr);
@@ -85,12 +97,18 @@ function fillTable(clear) {
         if (package.open){
             tbody.append(`<td  colspan='5'> 
                             <div class='table-menu'>
-                                <div class='map' id='map_${counter}'> </div>
-                                <div>  test </div>
+                                <div class='sub-menu' id='map_${counter}'> </div>
+                                <div class='sub-menu'> 
+                                    <table class="table">
+                                        <tbody id='package_${counter}'>
+                                        </tbody>  
+                                    </table>
+                                </div>
                              </div>
                         </td>`);
 
             addMap("map_"+counter,location);
+            addPackageList("package_" + counter,packageList);
         }
 
         counter--;

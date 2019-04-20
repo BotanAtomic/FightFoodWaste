@@ -21,7 +21,7 @@ let STATUS = [
     },
     {
         id: 4,
-        name : "CANCEL",
+        name : "CANCELED",
         color : "red"
     }
 ]
