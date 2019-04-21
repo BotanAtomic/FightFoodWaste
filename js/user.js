@@ -34,8 +34,7 @@ function onLogin(data) {
 }
 
 function onRegister(data) {
-    alert("Sucessfull signup ");
-    gotoPage("login.html");
+    window.location = "../login/";
 }
 
 

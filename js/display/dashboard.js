@@ -67,11 +67,12 @@ function fillTable(clear) {
         $("#table_dashboard").find("tbody").empty();
     }
 
-    let counter = list.length;
+    let counter = 1;
 
     list.forEach(package => {
         let packageId = package._id;
-        let dateobj = new Date(+package.date.creation).toLocaleDateString('fr-FR', { timeZone: 'UTC' });
+        let dateobj = new Date(+package.date.creation).toLocaleString('fr-FR');
+
         let userName = package.user["root.name"];
         let packageList = package.package;
         let location = package.location;
@@ -111,7 +112,7 @@ function fillTable(clear) {
             addPackageList("package_" + counter,packageList);
         }
 
-        counter--;
+        counter++;
     });
 }
 
