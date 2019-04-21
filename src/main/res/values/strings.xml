@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FFW BCS</string>
+    <string name="title_activity_bcscanner">BCScanner</string>
+</resources>
