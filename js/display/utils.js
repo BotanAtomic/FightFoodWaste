@@ -14,22 +14,27 @@ function loadNavBar()
     $("header").load("../../elements/navbar.html"); 
 }
 
-function loadFooter()
-{
-    $("footer").load("../../elements/footer.html"); 
-}
-
-function loadDashboard()
-{
+function loadDashboard() {
     if(isUserLogged()){
-        console.log("Logged");
-        if(getUserInfo('type') == 1) {
-            console.log("admin");
+        if(getUserInfo('type') === 1) {
             $("#dashboard-content").load("../../elements/dashboard/admin.html");
         }
         else{
-            console.log("user");
             $("#dashboard-content").load("../../elements/dashboard/user.html");
+        }
+    }
+    else{
+        window.location = "../login";
+    }
+}
+
+function loadPackages() {
+    if(isUserLogged()){
+        if(getUserInfo('type') === 1) {
+            $("#package-content").load("../../elements/package/admin.html");
+        }
+        else{
+            $("#package-content").load("../../elements/package/user.html");
         }
     }
     else{

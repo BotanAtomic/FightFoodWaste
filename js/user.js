@@ -26,12 +26,10 @@ function handleRegistration(event) {
 }
 
 function onLogin(data) {
-    alert(" Login ");
     user = JSON.parse(data);
 
     window.localStorage.setItem('user', data);
 
-    alert("Sucessfull Login ");
     window.location = "../dashboard";
 }
 

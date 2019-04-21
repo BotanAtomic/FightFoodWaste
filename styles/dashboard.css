@@ -1,0 +1,37 @@
+.menu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.item {
+    height: 200px;
+    width: 200px;
+    background-color: white;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    position: relative;
+    background-size: 160px;
+    background-position: center;
+    background-position-y: top;
+    background-repeat: no-repeat
+}
+
+.title-item {
+    height: 40px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-top: black;
+    border-width: 0;
+    border-top-width: 1px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
