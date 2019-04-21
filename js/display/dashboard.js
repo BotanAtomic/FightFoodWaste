@@ -30,18 +30,25 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-function addPackageList(id,package)
-{
-    const tBody = $("#"+id)
-    package.forEach(package => {
+async function addPackageList(id,package) {
+    const tBody = $("#"+id);
+
+    const data = {};
+
+    package.forEach(item => data[item] ? data[item]++ : data[item] = 1);
+
+    console.log(package);
+
+    Object.keys(data).forEach(async item => {
         const tr = $("<tr></tr>");
-
-        tr.append(`<th scope='row'>Quantite</th>`);
-        tr.append(`<td> product name ${package}</td> `);
-        tr.append(`<td> Lien openfood </td>`);
-
+        console.log(item);
+        await getProductName(item, (name) => {
+            tr.append(`<th scope='row'>${data[item]}x</th>`);
+            tr.append(`<td> ${name}</td> `);
+            //tr.append(`<td> Lien openfood </td>`);
+        });
         tBody.append(tr);
-    })
+    });
 }
 
 function updatePackage(status, id) {
@@ -70,6 +77,7 @@ function fillTable(clear) {
     let counter = 1;
 
     list.forEach(package => {
+        console.log(package);
         let packageId = package._id;
         let dateobj = new Date(+package.date.creation).toLocaleString('fr-FR');
 

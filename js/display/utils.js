@@ -15,7 +15,7 @@ function loadNavBar() {
 function loadDashboard() {
     if (isUserLogged()) {
         if (getUserInfo('type') === 1) {
-            $("#dashboard-content").load("../../elements/dashboard/table.html");
+            $("#dashboard-content").load("../../elements/dashboard/admin.html");
         } else {
             $("#dashboard-content").load("../../elements/dashboard/user.html");
         }
