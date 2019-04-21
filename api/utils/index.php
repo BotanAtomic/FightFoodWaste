@@ -1,7 +1,5 @@
 <?php
 
-use function MongoDB\BSON\fromPHP;
-
 function checkType($type, $value) {
     switch ($type) {
         case JSON_STRING:

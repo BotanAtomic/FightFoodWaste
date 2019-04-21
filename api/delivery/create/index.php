@@ -9,7 +9,7 @@ require_once "../../pattern/index.php";
 
 $input = json_decode(file_get_contents('php://input'), TRUE);
 
-if (!DeliveryPattern::isValidCreateInput($input)) {
+if (!DeliveryPattern::isValidCreateInput($input) || sizeof($input['package']) < 1) {
     http_response_code(404);
     return;
 }
@@ -22,10 +22,6 @@ if (!($_id = isValidToken($input['token']))) {
 
 $client = (new MongoDB\Client)->ffw;
 
-if (DeliveryPattern::isPackageFree($client->deliveries, $input['package'])) {
-    DeliveryPattern::create($client, $input, $_id);
-    http_response_code(200);
-} else {
-    http_response_code(409);
-}
+DeliveryPattern::create($client, $input, $_id);
+    
 

@@ -1,6 +1,5 @@
 <?php
 
-
 function generateToken($id): string {
     $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return substr(str_shuffle($chars), 0, 10) . $id;

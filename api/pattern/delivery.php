@@ -1,10 +1,10 @@
 <?php
 
-define("TO_PROGRAM", 0);
-define("TAKEN", 1);
-define("IN_PROGRESS", 2);
-define("DONE", 3);
-define("CANCELED", 4);
+define("WAITING", 0);// grey
+define("TAKEN", 1);// blue
+define("IN_PROGRESS", 2);// orange
+define("DONE", 3); // green
+define("CANCELED", 4); // red
 
 class DeliveryPattern {
 
@@ -38,10 +38,6 @@ class DeliveryPattern {
         return checkFields(self::$REQUIRED_UPDATE_FIELDS, $input);
     }
 
-    public static function isPackageFree($collection, $package): bool {
-        return !$collection->findOne(['package' => ['$in' => $package]]);
-    }
-
     public static function create($client, $input, $_id) {
         $client->deliveries->insertOne([
             'date' => [
@@ -52,7 +48,7 @@ class DeliveryPattern {
             ],
             'package' => $input['package'],
             'location' => UserPattern::getSingleField($client->users, $_id, 'location'),
-            'status' => TO_PROGRAM,
+            'status' => WAITING,
             'reception' => true
         ]);
     }
@@ -94,6 +90,7 @@ class DeliveryPattern {
             ],
             'status' => $data['status'],
             'location' => $data['location']['coordinates']
+
         ];
 
         return $base;
