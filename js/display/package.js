@@ -1,10 +1,11 @@
 let list = null;
+let page = 1;
 
 function onPackageSuccess(data) {
     list = JSON.parse(data);
 
     if (list)
-        fillTable(false);
+        fillTable(true);
 }
 
 function onPackageFailed(errorCode) {
@@ -12,7 +13,7 @@ function onPackageFailed(errorCode) {
 }
 
 function onPackageUpdateSuccess(data, id, status) {
-    updateTableElement(id,"status",status);
+    updateTableElement(id, "status", status);
 }
 
 function onPackageUpdateFailed(errorCode) {
@@ -20,9 +21,9 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
 
-    L.marker([location[0],location[1]]).addTo(macarte);
+    L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: '',
         minZoom: 1,
@@ -30,22 +31,18 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-async function addPackageList(id,package) {
-    const tBody = $("#"+id);
+function addPackageList(id, package) {
+    const tBody = $("#" + id);
 
     const data = {};
 
     package.forEach(item => data[item] ? data[item]++ : data[item] = 1);
 
-    console.log(package);
-
     Object.keys(data).forEach(async item => {
         const tr = $("<tr></tr>");
-        console.log(item);
         await getProductName(item, (name) => {
             tr.append(`<th scope='row'>${data[item]}x</th>`);
             tr.append(`<td> ${name}</td> `);
-            //tr.append(`<td> Lien openfood </td>`);
         });
         tBody.append(tr);
     });
@@ -55,10 +52,10 @@ function updatePackage(status, id) {
     updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
 }
 
-function updateTableElement(id,fields,value){
+function updateTableElement(id, fields, value) {
     // Update element status
     list.forEach(package => {
-        if(package._id == id){
+        if (package._id === id) {
             package[fields] = value;
         }
     });
@@ -69,7 +66,7 @@ function updateTableElement(id,fields,value){
 
 function fillTable(clear) {
 
-    if(clear){
+    if (clear) {
         // Clear current table
         $("#table_dashboard").find("tbody").empty();
     }
@@ -103,12 +100,12 @@ function fillTable(clear) {
         tr.append(actionTd);
         tbody.append(tr);
 
-        if (package.open){
+        if (package.open) {
             tbody.append(`<td  colspan='5'> 
                             <div class='table-menu'>
                                 <div class='sub-menu' id='map_${counter}'> </div>
                                 <div class='sub-menu'> 
-                                    <table class="table">
+                                    <table class="package-table">
                                         <tbody id='package_${counter}'>
                                         </tbody>  
                                     </table>
@@ -116,28 +113,20 @@ function fillTable(clear) {
                              </div>
                         </td>`);
 
-            addMap("map_"+counter,location);
-            addPackageList("package_" + counter,packageList);
+            addMap("map_" + counter, location);
+            addPackageList("package_" + counter, packageList);
         }
 
         counter++;
     });
 }
 
-function generateTableAdmin() {
-    if (isUserLogged() && getUserInfo("permission") == 1) {
-        getPackageRequest(getUserInfo("token"), true, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
-    }
-    else {
-        window.location = "../login";
-    }
-}
-
-function generateTableUser() {
-    if (isUserLogged() && getUserInfo("permission") == 0) {
-        getPackageRequest(getUserInfo("token"), false, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
-    }
-    else {
+function generateTable() {
+    if (isUserLogged()) {
+        $('#page-display').html(page);
+        const permission = getUserInfo("permission") === 1;
+        getPackageRequest(getUserInfo("token"), permission, page, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
+    } else {
         window.location = "../login";
     }
 }

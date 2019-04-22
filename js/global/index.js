@@ -24,4 +24,4 @@ let STATUS = [
         name : "CANCELED",
         color : "red"
     }
-]
+];

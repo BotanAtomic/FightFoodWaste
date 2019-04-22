@@ -12,7 +12,7 @@ function handleLogin(event) {
 
 function handleRegistration(event) {
     event.preventDefault();
-    
+
     let email = $("#form_register_email").val();
     let name = $("#form_register_name").val();
     let forename = $("#form_register_forename").val();
@@ -28,7 +28,8 @@ function handleRegistration(event) {
 function onLogin(data) {
     user = JSON.parse(data);
 
-    window.localStorage.setItem('user', data);
+
+    window.sessionStorage.setItem('user', data);
 
     window.location = "../dashboard";
 }
@@ -47,13 +48,14 @@ function onLoginFailed(statusCode) {
 }
 
 function isUserLogged() {
-    if( window.localStorage.getItem('user') != null ){
-        if( !user ){
-            user = JSON.parse(window.localStorage.getItem('user'));
-        }
+
+    if (window.sessionStorage.getItem('user') != null) {
+        if (!user)
+            user = JSON.parse(window.sessionStorage.getItem('user'));
+
         return true;
     }
-    return false;   
+    return false;
 }
 
 function getUserInfo(field) {
@@ -61,5 +63,5 @@ function getUserInfo(field) {
 }
 
 function userDisconnect() {
-    window.localStorage.removeItem('user');
+    window.sessionStorage.removeItem('user');
 }
