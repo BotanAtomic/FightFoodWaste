@@ -1,12 +1,10 @@
 let list = null;
-let page = 1;
-let limit = 40;
 
 function onPackageSuccess(data) {
     list = JSON.parse(data);
 
     if (list)
-        fillTable(true);
+        fillTable(false);
 }
 
 function onPackageFailed(errorCode) {
@@ -14,7 +12,7 @@ function onPackageFailed(errorCode) {
 }
 
 function onPackageUpdateSuccess(data, id, status) {
-    updateTableElement(id, "status", status);
+    updateTableElement(id,"status",status);
 }
 
 function onPackageUpdateFailed(errorCode) {
@@ -22,9 +20,9 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
-    L.marker([location[0], location[1]]).addTo(macarte);
+    L.marker([location[0],location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: '',
         minZoom: 1,
@@ -32,31 +30,28 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-function addPackageList(id, package) {
-    const tBody = $("#" + id);
-
-    const data = {};
-
-    package.forEach(item => data[item] ? data[item]++ : data[item] = 1);
-
-    Object.keys(data).forEach(async item => {
+function addPackageList(id,package)
+{
+    const tBody = $("#"+id)
+    package.forEach(package => {
         const tr = $("<tr></tr>");
-        await getProductName(item, (name) => {
-            tr.append(`<th scope='row'>${data[item]}x</th>`);
-            tr.append(`<td> ${name}</td> `);
-        });
+
+        tr.append(`<th scope='row'>Quantite</th>`);
+        tr.append(`<td> product name ${package}</td> `);
+        tr.append(`<td> <a href='https://fr.openfoodfacts.org/produit/${package}/'> <i class="fas fa-info-circle"></i> </a> </td>`);
+
         tBody.append(tr);
-    });
+    })
 }
 
 function updatePackage(status, id) {
     updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
 }
 
-function updateTableElement(id, fields, value) {
+function updateTableElement(id,fields,value){
     // Update element status
     list.forEach(package => {
-        if (package._id === id) {
+        if(package._id == id){
             package[fields] = value;
         }
     });
@@ -67,18 +62,16 @@ function updateTableElement(id, fields, value) {
 
 function fillTable(clear) {
 
-    if (clear) {
+    if(clear){
         // Clear current table
         $("#table_dashboard").find("tbody").empty();
     }
 
-    let counter = 1;
+    let counter = list.length;
 
     list.forEach(package => {
-        console.log(package);
         let packageId = package._id;
-        let dateobj = new Date(+package.date.creation).toLocaleString('fr-FR');
-
+        let dateobj = new Date(+package.date.creation).toLocaleDateString('fr-FR', { timeZone: 'UTC' });
         let userName = package.user["root.name"];
         let packageList = package.package;
         let location = package.location;
@@ -101,12 +94,12 @@ function fillTable(clear) {
         tr.append(actionTd);
         tbody.append(tr);
 
-        if (package.open) {
+        if (package.open){
             tbody.append(`<td  colspan='5'> 
                             <div class='table-menu'>
                                 <div class='sub-menu' id='map_${counter}'> </div>
                                 <div class='sub-menu'> 
-                                    <table class="package-table">
+                                    <table class="table">
                                         <tbody id='package_${counter}'>
                                         </tbody>  
                                     </table>
@@ -114,22 +107,28 @@ function fillTable(clear) {
                              </div>
                         </td>`);
 
-            addMap("map_" + counter, location);
-            addPackageList("package_" + counter, packageList);
+            addMap("map_"+counter,location);
+            addPackageList("package_" + counter,packageList);
         }
 
-        counter++;
+        counter--;
     });
 }
 
-function generateTable() {
-    if (isUserLogged()) {
-        $('#page-display').html(page);
-        let skip =  (limit * (page - 1));
+function generateTableAdmin() {
+    if (isUserLogged() && getUserInfo("permission") == 1) {
+        getPackageRequest(getUserInfo("token"), true, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
+    }
+    else {
+        window.location = "../login";
+    }
+}
 
-        const permission = getUserInfo("permission") === 1;
-        getPackageRequest(getUserInfo("token"), permission, skip,limit, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
-    } else {
+function generateTableUser() {
+    if (isUserLogged() && getUserInfo("permission") == 0) {
+        getPackageRequest(getUserInfo("token"), false, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
+    }
+    else {
         window.location = "../login";
     }
 }

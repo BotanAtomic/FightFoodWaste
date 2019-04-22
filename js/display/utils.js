@@ -31,3 +31,13 @@ function loadPackages() {
         window.location = "../login";
     }
 }
+
+function loadMap()
+{
+    if(isUserLogged())
+    {
+        $("#map-content").load("../../elements/map/index.html");
+    }else {
+        window.location = "../login";
+    }
+}
