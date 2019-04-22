@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static InetAddress serverAddress;
 
+    private Handler handler;
+
 
     private List<InetAddress> listAllBroadcastAddresses() throws SocketException {
         List<InetAddress> broadcastList = new ArrayList<>();
@@ -53,49 +55,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        this.handler = new Handler(getMainLooper());
+        sendSignal();
+    }
 
-        final Handler handler = new Handler(getMainLooper());
-
+    private void sendSignal() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    DatagramSocket server = new DatagramSocket();
+                while (serverAddress == null) {
+                    try {
+                        DatagramSocket server = new DatagramSocket();
 
 
-                    for (InetAddress inetAddress : listAllBroadcastAddresses()) {
-                        DatagramPacket packet = new DatagramPacket("H".getBytes(), 1,
-                                inetAddress,
-                                6789);
+                        for (InetAddress inetAddress : listAllBroadcastAddresses()) {
+                            DatagramPacket packet = new DatagramPacket("H".getBytes(), 1,
+                                    inetAddress,
+                                    6789);
 
-                        server.send(packet);
-                    }
-
-                    byte[] buffer = new byte[1];
-                    DatagramPacket reception = new DatagramPacket(buffer, 1);
-                    server.receive(reception);
-
-                    serverAddress = reception.getAddress();
-
-
-                    Log.i("FFW", "Server address " + serverAddress.toString());
-
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i("FFW", "LOLza ezfeezfezfzefzefs " + serverAddress.toString());
-                            Intent intent = new Intent(MainActivity.this, BCScanner.class);
-                            MainActivity.this.startActivity(intent);
+                            Log.e("FFW", "Send to address " + inetAddress.toString());
+                            server.send(packet);
                         }
-                    }, 1500);
+                        byte[] buffer = new byte[1];
+                        DatagramPacket reception = new DatagramPacket(buffer, 1);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        server.setSoTimeout(4000);
+                        server.receive(reception);
+
+                        serverAddress = reception.getAddress();
+
+                        Log.e("FFW", "Server address " + serverAddress.toString());
+
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(MainActivity.this, BCScanner.class);
+                                MainActivity.this.startActivity(intent);
+                                Log.e("FFW", "Main activity started " + serverAddress.toString());
+                            }
+                        }, 1500);
+
+                    } catch (Exception e) {
+                        Log.e("FFW", e.getMessage());
+                        e.printStackTrace();
+                    }
                 }
+
             }
         }).start();
-
-
     }
 
 }
