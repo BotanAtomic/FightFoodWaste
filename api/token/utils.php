@@ -9,13 +9,17 @@ function getIdByToken($token) {
     return new MongoDB\BSON\ObjectId(substr($token, 10));
 }
 
+
 function isValidToken($token) {
     try {
         $collection = (new MongoDB\Client)->ffw->users;
         $_id = getIdByToken($token);
-        $result = $collection->findOne(['_id' => $_id, 'token.value' => $token, 'token.expiration' => [
-            '$gte' => new MongoDB\BSON\UTCDateTime()
-        ]], ['projection' => ['_id' => 1]]);
+        $result = $collection->findOne(['_id' => $_id, 'tokens' => ['$elemMatch' => [
+            'value' => $token,
+            'expiration' => [
+                '$gte' => new MongoDB\BSON\UTCDateTime()
+            ]
+        ]]], ['projection' => ['_id' => 1]]);
     } finally {
         return isset($result) ? $_id : false;
     }

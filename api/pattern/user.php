@@ -31,15 +31,16 @@ class UserPattern {
         return checkFields(self::$REQUIRED_REGISTER_FIELDS, $input);
     }
 
-    public static function setToken($collection, $user, $token) {
-        $collection->updateOne(['_id' => $user['_id']], ['$set' => [
-            'token' => [
+    public static function addToken($collection, $user, $token) {
+        $collection->updateOne(['_id' => $user['_id']], ['$push' => [
+            'tokens' => [
                 'value' => $token,
                 'expiration' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp() * 1000 + (3600000 * 2))
             ]
         ]]);
 
         unset($user['_id']);
+        unset($user['tokens']);
         $user['token'] = $token;
     }
 

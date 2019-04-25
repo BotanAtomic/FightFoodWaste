@@ -19,8 +19,7 @@ $collection = (new MongoDB\Client)->ffw->users;
 $user = $collection->findOne($input);
 
 if ($user) {
-    UserPattern::setToken($collection, $user, generateToken($user['_id']));
-
+    UserPattern::addToken($collection, $user, generateToken($user['_id']));
     echo bsonToJson($user);
 } else {
     http_response_code(401);

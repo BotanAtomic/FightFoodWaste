@@ -32,7 +32,8 @@ if ($input['all']) {
 }
 
 echo DeliveryPattern::formatMultiple(
-    DeliveryPattern::get($client->deliveries, $_id, $input['all'], $input['status']), $client
+    DeliveryPattern::get($client->deliveries, $_id,
+        $input['all'], $input['status'], $input['skip'], $input["limit"]), $client
 );
 
 

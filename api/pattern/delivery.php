@@ -23,7 +23,9 @@ class DeliveryPattern {
     private static $REQUIRED_GET_FIELDS = [
         'token' => JSON_STRING,
         'all' => JSON_BOOLEAN,
-        'status' => JSON_ARRAY
+        'status' => JSON_ARRAY,
+        'skip' => JSON_NUMBER,
+        'limit' => JSON_NUMBER
     ];
 
     public static function isValidCreateInput($input): bool {
@@ -53,13 +55,14 @@ class DeliveryPattern {
         ]);
     }
 
-    public static function get($collection, $_id, $all, $status) {
+    public static function get($collection, $_id, $all, $status, $skip, $limit) {
         $params = ['status' => ['$in' => $status]];
 
         if (!$all)
             $params['user.client'] = $_id;
 
-        $cursor = $collection->find($params);
+        $cursor = $collection->find($params, ['sort' => ['date.creation' => -1],
+            'limit' => $limit, 'skip' => $skip]);
 
         return $cursor->toArray();
     }
@@ -77,6 +80,7 @@ class DeliveryPattern {
 
     public static function format($data, $client) {
         $rootUser = UserPattern::get($client->users, $data['user']['root']);
+        $warehouses = WarehousePattern::getNearest($client->warehouses, $data['location']['coordinates']);
 
         $base = [
             '_id' => $data['_id']->__toString(),
@@ -89,8 +93,8 @@ class DeliveryPattern {
                 'root.name' => $rootUser['name'] . ' ' . $rootUser['forename']
             ],
             'status' => $data['status'],
-            'location' => $data['location']['coordinates']
-
+            'location' => $data['location']['coordinates'],
+            'warehouses' => WarehousePattern::format($warehouses)
         ];
 
         return $base;

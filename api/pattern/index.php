@@ -7,3 +7,4 @@ define('JSON_BOOLEAN', 3);
 
 require_once 'delivery.php';
 require_once 'user.php';
+require_once 'warehouse.php';
