@@ -59,7 +59,7 @@ class DeliveryPattern {
         $params = ['status' => ['$in' => $status]];
 
         if (!$all)
-            $params['user.client'] = $_id;
+            $params['user.root'] = $_id;
 
         $cursor = $collection->find($params, ['sort' => ['date.creation' => -1],
             'limit' => $limit, 'skip' => $skip]);
