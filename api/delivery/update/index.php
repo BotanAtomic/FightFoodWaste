@@ -20,13 +20,25 @@ if (!($_id = isValidToken($input['token']))) {
 }
 
 $client = (new MongoDB\Client)->ffw;
-$package = DeliveryPattern::getById($client->deliveries, $input['delivery']);
+$delivery = DeliveryPattern::getById($client->deliveries, $input['delivery']);
 $permission = UserPattern::getSingleField($client->users, $_id, 'permission');
 
-if ($permission != ADMIN && $package->user->root != $_id) {
+if ($permission != ADMIN && $delivery->user->root != $_id) {
     http_response_code(401);
     return;
 }
 
-DeliveryPattern::updateStatus($client->deliveries, $input['delivery'], $input['status']);
+$status = $input['status'];
+
+DeliveryPattern::updateStatus($client->deliveries, $input['delivery'], $status);
+
+if ($delivery->reception && $status == DONE) {
+    WarehousePattern::addPackage(
+        $client->warehouses,
+        WarehousePattern::getNearest($client->warehouses,
+            $delivery['location']['coordinates'])['_id'],
+        $delivery['package'],
+        $delivery['user']['giver']
+    );
+}
 

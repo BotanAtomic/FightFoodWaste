@@ -46,7 +46,7 @@ class DeliveryPattern {
                 'creation' => new MongoDB\BSON\UTCDateTime()
             ],
             'user' => [
-                'root' => $_id
+                'giver' => $_id
             ],
             'package' => $input['package'],
             'location' => UserPattern::getSingleField($client->users, $_id, 'location'),
@@ -59,7 +59,7 @@ class DeliveryPattern {
         $params = ['status' => ['$in' => $status]];
 
         if (!$all)
-            $params['user.root'] = $_id;
+            $params['user.giver'] = $_id;
 
         $cursor = $collection->find($params, ['sort' => ['date.creation' => -1],
             'limit' => $limit, 'skip' => $skip]);
@@ -79,7 +79,7 @@ class DeliveryPattern {
     }
 
     public static function format($data, $client) {
-        $rootUser = UserPattern::get($client->users, $data['user']['root']);
+        $giverUser = UserPattern::get($client->users, $data['user']['giver']);
         $warehouses = WarehousePattern::getNearest($client->warehouses, $data['location']['coordinates']);
 
         $base = [
@@ -89,8 +89,8 @@ class DeliveryPattern {
                 'creation' => $data['date']['creation']->__toString(),
             ],
             'user' => [
-                'root' => $data['user']['root']->__toString(),
-                'root.name' => $rootUser['name'] . ' ' . $rootUser['forename']
+                'giver' => $data['user']['giver']->__toString(),
+                'giver.name' => $giverUser['name'] . ' ' . $giverUser['forename']
             ],
             'status' => $data['status'],
             'location' => $data['location']['coordinates'],

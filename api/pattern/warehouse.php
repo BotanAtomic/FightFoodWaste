@@ -11,11 +11,29 @@ class WarehousePattern {
 
     public static function getNearest($collection, $position) {
         return $collection->findOne(['location' => ['$near' => [
-            '$geometry' => [
-                'type' => "Point",
-                'coordinates' => $position
-            ]
-        ]]]);
+                '$geometry' => [
+                    'type' => "Point",
+                    'coordinates' => $position
+                ]
+            ]]]
+        );
+    }
+
+    public static function addPackage($collection, $warehouseId, $package, $giver) {
+        $collection->updateOne(['_id' => $warehouseId], [
+            '$push' =>
+                ['stock' =>
+                    [
+                        'date' => [
+                            'arrival' => new MongoDB\BSON\UTCDateTime()
+                        ],
+                        'package' => $package,
+                        'user' => [
+                            'giver' => $giver
+                        ]
+                    ]
+                ]
+        ]);
     }
 
 }
