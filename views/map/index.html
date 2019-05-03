@@ -26,8 +26,13 @@
 
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 
-  <script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' />
+
+  <!-- MAP Include -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+  <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95"></script>
+  <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95"></script>
+  
 
   <script>
     $(document).ready(checkTopButton);
@@ -43,9 +48,6 @@
         </script>
     </header>
   
-    <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
-
     <div id="map-content">
         <script>
                 loadMap();

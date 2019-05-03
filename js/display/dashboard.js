@@ -41,7 +41,7 @@ function addPackageList(id,package)
         tr.append(`<td> <a href='https://fr.openfoodfacts.org/produit/${package}/'> <i class="fas fa-info-circle"></i> </a> </td>`);
 
         tBody.append(tr);
-    })
+    });
 }
 
 function updatePackage(status, id) {

@@ -1,59 +1,124 @@
 let list = null;
-function onPackageSuccess (data){
+
+function onPackageSuccess(data) {
     list = JSON.parse(data);
 
-    if(list){
+    if (list) {
         initMap();
     }
 }
 
-function generateItinerary(map,origin,destination){
-    var directions = L.mapbox.directions();
-
-    console.log(directions);
-    directions.setOrigin(L.latLng(origin[0],origin[1]));
-    directions.setDestination(L.latLng(destination[0], destination[1]));
-    directions.query();
-    
-    var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
-   // var directionsInputControl = L.mapbox.directions.inputControl('inputs', directions).addTo(map);
-    var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', directions).addTo(map);
-    var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
-    // var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions).addTo(map);
-}
-
-function initMap(){
-    L.mapbox.accessToken = 'pk.eyJ1IjoicGF1bHN1bmt5byIsImEiOiJjanVzaGN6aW8wbGtoNGRuNnh4cWVrZ2htIn0.HPK1Q8N9S8im4PMidARzOQ';
-
-    let map = L.mapbox.map('map', null, {
-    zoomControl: false
-    })
-  .setView([48.898961, 2.518569], 9)
-  .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
-
-    // move the attribution control out of the way
-    map.attributionControl.setPosition('bottomleft');
-
-
-    list.forEach(package => {
-       console.log(package);
-       generateItinerary(map,[48.898961, 2.518569],[48.886873, 2.544347]);
-    });
-   
-}
-
-function onPackageFailed(errorCode){
+function onPackageFailed(errorCode) {
     alert("Failed retrieving package : " + errorCode);
 }
 
-function generateMap()
-{
+function getLocations(itinerary) {
+    let locations = [];
+
+    itinerary.forEach(package => {
+        console.log(package);
+        locations.push(
+            {
+                latLng: { lat: package.location[0], lng: package.location[1] }
+            }
+        );
+    });
+
+    locations.push(
+        {
+            latLng: { lat: itinerary[0].warehouses.location[0], lng: itinerary[0].warehouses.location[1] }
+        }
+    );
+
+    return locations;
+}
+
+function createItinerary(map) {
+
+    const warehouses = [... new Set(list.map(package => package.warehouses.city))];
+
+    warehouses.forEach(warehouse => {
+        const itinerary = list.filter(package => package.warehouses.city == warehouse);
+
+        let dir;
+        dir = MQ.routing.directions();
+
+        dir.route({
+            locations: getLocations(itinerary)
+        });
+
+        CustomRouteLayer = MQ.Routing.RouteLayer.extend({
+            createStopMarker: function (location, stopNumber) {
+                var custom_icon,
+                    marker;
+
+                custom_icon = L.icon({
+                    iconUrl: 'https://www.mapquestapi.com/staticmap/geticon?uri=poi-red_1.png',
+                    iconSize: [20, 29],
+                    iconAnchor: [10, 29],
+                    popupAnchor: [0, -29]
+                });
+
+                marker = L.marker(location.latLng, { icon: custom_icon })
+                    .bindPopup(location.adminArea5 + ' ' + location.adminArea3)
+                    .openPopup()
+                    .addTo(map);
+
+                return marker;
+            },
+
+            createEndMarker: function (location, stopNumber) {
+                var custom_icon,
+                    marker;
+
+                custom_icon = L.icon({
+                    iconUrl: 'https://www.mapquestapi.com/staticmap/geticon?uri=poi-blue_1.png',
+                    iconSize: [20, 29],
+                    iconAnchor: [10, 29],
+                    popupAnchor: [0, -29]
+                });
+
+                marker = L.marker(location.latLng, { icon: custom_icon })
+                    .bindPopup(location.adminArea5 + ' ' + location.adminArea3)
+                    .openPopup()
+                    .addTo(map);
+
+                return marker;
+            }
+        });
+
+        map.addLayer(new CustomRouteLayer({
+            directions: dir,
+            fitBounds: true,
+            draggable: false,
+            ribbonOptions: {
+                draggable: false,
+                ribbonDisplay: { color: '#CC0000', opacity: 0.3 },
+                widths: [15, 15, 15, 15, 14, 13, 12, 12, 12, 11, 11, 11, 11, 12, 13, 14, 15]
+            }
+        }));
+
+    });
+
+}
+
+function initMap() {
+
+    map = L.map('map', {
+        layers: MQ.mapLayer(),
+        center: [38.895345, -77.030101],
+        zoom: 15
+    });
+
+    createItinerary(map);
+}
+
+function generateMap() {
     if (isUserLogged()) {
         const permission = getUserInfo("permission") === 1;
-        getPackageRequest(getUserInfo("token"), permission, 0,0, [0, 1, 2], onPackageSuccess, onPackageFailed);
+        getPackageRequest(getUserInfo("token"), permission, 0, 0, [0, 1, 2], onPackageSuccess, onPackageFailed);
     }
-    else
-    {
+    else {
         window.location = "../login";
-    } 
+    }
 }

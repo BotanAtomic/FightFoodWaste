@@ -79,7 +79,7 @@ function fillTable(clear) {
         let packageId = package._id;
         let dateobj = new Date(+package.date.creation).toLocaleString('fr-FR');
 
-        let userName = package.user["root.name"];
+        let userName = package.user["giver.name"];
         let packageList = package.package;
         let location = package.location;
         let status = STATUS[package.status];
