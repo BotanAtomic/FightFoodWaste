@@ -18,11 +18,15 @@ function handleRegistration(event) {
     let forename = $("#form_register_forename").val();
     let password = $("#form_register_password").val();
     let type = $("#form_register_type").val();
+    let address = $("#form_register_address").val();
 
     let agreement = $("#form_register_email").val();
 
-    if (email && name && forename && password && agreement)
-        registerRequest(name, forename, email, type, password, onRegister, onRegisterFailed);
+   getLatLong(address).then(coordinates=>{
+        if (email && name && forename && password && agreement && address != undefined){
+            registerRequest(name, forename, email, type,[coordinates.lat,coordinates.lng], password, onRegister, onRegisterFailed);
+        }
+    });
 }
 
 function onLogin(data) {

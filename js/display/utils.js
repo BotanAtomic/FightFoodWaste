@@ -32,6 +32,15 @@ function loadPackages() {
     }
 }
 
+function loadStocks()
+{
+    if (isUserLogged()) {
+        $("#stock-content").load("../../elements/stock/index.html");
+    } else {
+        window.location = "../login";
+    }
+}
+
 function loadMap()
 {
     if(isUserLogged())

@@ -33,7 +33,7 @@ function getLocations(itinerary) {
     return locations;
 }
 
-function createItinerary(map) {
+function createItinerarys(map) {
 
     const warehouses = [... new Set(list.map(package => package.warehouses.city))];
 
@@ -110,7 +110,7 @@ function initMap() {
         zoom: 15
     });
 
-    createItinerary(map);
+    createItinerarys(map);
 }
 
 function generateMap() {
