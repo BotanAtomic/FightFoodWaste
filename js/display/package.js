@@ -22,7 +22,7 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
     L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
@@ -84,12 +84,15 @@ function fillTable(clear) {
         let location = package.location;
         let status = STATUS[package.status];
 
+        let manager = package.status >= 1 ? package.user["manager.name"] : null;
+
         const tbody = $("#table_dashboard").find("tbody:first");
         const tr = $("<tr></tr>");
 
         tr.append(`<th scope='row'>${counter}</th>`);
         tr.append(`<td>${dateobj}</td> `);
-        tr.append(`<td>${userName}</td>`);
+        tr.append(`<td> ${userName} </td>`);
+        tr.append(`<td> ${manager != null ? manager : ""} </td>`);
         tr.append(`<td> <span style='background-color:${status.color}' class='status'> ${status.name} </span> </td> `);
 
         const actionTd = $("<td></td>");
@@ -122,13 +125,18 @@ function fillTable(clear) {
     });
 }
 
-function generateTable() {
+function generateTable(isDelivery) {
     if (isUserLogged()) {
         $('#page-display').html(page);
-        let skip =  (limit * (page - 1));
+        let skip = (limit * (page - 1));
 
-        const permission = getUserInfo("permission") === 1;
-        getPackageRequest(getUserInfo("token"), permission, skip,limit, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
+        // Hide class menu 
+        $("#selection-content").css("display","none");
+
+        // Show table 
+        $("#data-content").removeAttr("style");
+
+        getPackageRequest(getUserInfo("token"),isDelivery, skip, limit, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
     } else {
         window.location = "../login";
     }

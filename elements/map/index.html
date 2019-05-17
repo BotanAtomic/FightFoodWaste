@@ -1,6 +1,24 @@
-<script> generateMap() </script>
+<div id="selection-content" class="menu">
 
-<div id='map'></div>
+    <a href="javascript:void(0)">
+        <div onclick="generateMap(true);" class="item" style="background-image: url('../../assets/icons/truck.png')">
+            <div class="title-item">
+                <span style="text-align: center;width: 100%;"><b>RECEPTION</b></span>
+            </div>
+        </div>
+    </a>
+
+    <a href="javascript:void(0)">
+        <div class="item" onclick="generateMap(false);"
+            style="margin-right: 30px; margin-left: 30px;background-image: url('../../assets/icons/delivery.png')">
+            <div class="title-item">
+                <span style="text-align: center;width: 100%;"><b>DELIVERY</b></span>
+            </div>
+        </div>
+    </a>
+</div>
+
+<div style="display:none" id='map'></div>
 <!-- <div id='inputs'></div> -->
 <div id='errors'></div>
 <!-- <div id='directions'>

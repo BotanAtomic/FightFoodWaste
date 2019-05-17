@@ -1,8 +1,14 @@
 let list = [];
+let open = {};
 
 function onStockSuccess(data) {
     if (data) {
         list = JSON.parse(data);
+
+        list.forEach(warehouse => {
+            open[warehouse.city] = {};
+        })
+
         fillTable();
     }
 }
@@ -19,10 +25,8 @@ function updateTableElement(city, fields, value) {
     fillTable(true);
 }
 
-let open = {};
-
-function updateOpen(product, value) {
-    open[product] = value;
+function updateOpen(city, product, value) {
+    open[city][product] = value;
 }
 
 function getPackageList(city, packages) {
@@ -63,12 +67,12 @@ function getPackageList(city, packages) {
             tr.append(`<td> ${name}</td> `);
 
             const actionTd = $("<td></td>");
-            !open[product] && actionTd.append(`<a style='color:grey' onclick='updateOpen(${product},true);  fillTable(true);' href='#' class='link_button fas fa-plus-square '> </a>`);
-            open[product] && actionTd.append(`<a style='color:red' onclick='updateOpen(${product},false); fillTable(true);' href='#' class='link_button fas fa-minus-square '> </a>`);
+            !open[city][product] && actionTd.append(`<a style='color:grey' onclick='updateOpen("${city}",${product},true);  fillTable(true);' href='#' class='link_button fas fa-plus-square '> </a>`);
+            open[city][product] && actionTd.append(`<a style='color:red' onclick='updateOpen("${city}",${product},false); fillTable(true);' href='#' class='link_button fas fa-minus-square '> </a>`);
 
             tr.append(actionTd);
 
-            if (open[product] == true) {
+            if (open[city][product] == true) {
                 const openTd = $("<td colspan='12'> </td>");
 
                 const openTable = $(`
@@ -82,7 +86,7 @@ function getPackageList(city, packages) {
                 packages.forEach(package => {
                     if (package.package != undefined) {
 
-                        
+
                         package.package.forEach(produit => {
 
                             if (produit == product) {
@@ -112,7 +116,7 @@ function getPackageList(city, packages) {
                 tbody.append(openTd);
             }
 
-            !open[product] ? tbody.append(tr) : null;
+            !open[city][product] ? tbody.append(tr) : null;
         });
     });
 }
@@ -128,6 +132,7 @@ function fillTable(clear) {
     }
 
     list.sort((a, b) => b.city - a.city).forEach(async (warehouse, i) => {
+
         const li = $("<li class='nav-item'> </li>");
 
         const a = $(`<a class="nav-link" id="${warehouse.city}-tab" 

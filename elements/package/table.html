@@ -1,32 +1,56 @@
-<script> generateTable() </script>
 
-<table id="table_dashboard" class="table">
-    <thead class="thead-dark">
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Date</th>
-        <th scope="col">User</th>
-        <th scope="col">Status</th>
-        <th scope="col">Action</th>
-    </tr>
-    </thead>
-    <tbody>
+<div id="selection-content" class="menu">
 
-    </tbody>
-</table>
+    <a href="javascript:void(0)">
+        <div onclick="generateTable(true);" class="item" style="background-image: url('../../assets/icons/truck.png')">
+            <div class="title-item">
+                <span style="text-align: center;width: 100%;"><b>RECEPTION</b></span>
+            </div>
+        </div>
+    </a>
+    
+    <a href="javascript:void(0)">
+        <div class="item" onclick="generateTable(false);"
+            style="margin-right: 30px; margin-left: 30px;background-image: url('../../assets/icons/delivery.png')">
+            <div class="title-item">
+                <span style="text-align: center;width: 100%;"><b>DELIVERY</b></span>
+            </div>
+        </div>
+    </a>
+</div>
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a class="page-link" href="" onclick="page--;generateTable();return false;" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item active"><a class="page-link" href="#" id="page-display">1</a></li>
-        <li class="page-item">
-            <a class="page-link" href="" onclick="page++;generateTable();return false;" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+<div id="data-content" style="display: none">
+
+    <table id="table_dashboard" class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">User</th>
+                <th scope="col">Manager</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="" onclick="page--;generateTable();return false;" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#" id="page-display">1</a></li>
+            <li class="page-item">
+                <a class="page-link" href="" onclick="page++;generateTable();return false;" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>

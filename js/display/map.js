@@ -113,10 +113,16 @@ function initMap() {
     createItinerarys(map);
 }
 
-function generateMap() {
+function generateMap(isDelivery) {
     if (isUserLogged()) {
-        const permission = getUserInfo("permission") === 1;
-        getPackageRequest(getUserInfo("token"), permission, 0, 0, [0, 1, 2], onPackageSuccess, onPackageFailed);
+
+        // Hide class menu 
+        $("#selection-content").css("display","none");
+
+        // Show table 
+        $("#map").removeAttr("style");
+
+        getPackageRequest(getUserInfo("token"), isDelivery, 0, 0, [0, 1, 2], onPackageSuccess, onPackageFailed);
     }
     else {
         window.location = "../login";

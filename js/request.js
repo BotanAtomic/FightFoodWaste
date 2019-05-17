@@ -91,8 +91,8 @@ function createPackageRequest(token, package, callback, error) {
     doRequest("delivery/create/", "POST", { token, package }, callback, error);
 }
 
-function getPackageRequest(token, all, skip, limit, status, callback, error) {
-    doRequest("delivery/get/", "POST", { token, all, status, skip, limit }, callback, error);
+function getPackageRequest(token,reception, skip, limit, status, callback, error) {
+    doRequest("delivery/get/", "POST", { token,reception, status, skip, limit }, callback, error);
 }
 
 function updatePackageRequest(token, delivery, status, callback, error) {
