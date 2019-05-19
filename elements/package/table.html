@@ -1,56 +1,107 @@
+<script>
+    let isDelivery = true;
+    let status = [0, 1, 2, 3, 4];
+    generateTable(isDelivery, status);
 
-<div id="selection-content" class="menu">
+    function toggleStatus(s) {
+        if(status.includes(s)) {
+            status = status.filter(ss => ss !== s);
+        } else {
+            status.push(s);
+        }
 
-    <a href="javascript:void(0)">
-        <div onclick="generateTable(true);" class="item" style="background-image: url('../../assets/icons/truck.png')">
-            <div class="title-item">
-                <span style="text-align: center;width: 100%;"><b>RECEPTION</b></span>
+        console.log(status);
+        generateTable(isDelivery, status);
+    }
+
+</script>
+
+
+<div id="data-content">
+
+    <div style="display: flex;flex-direction: row;">
+        <div class="dropdown" style="margin-right: 10px">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Mode
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <button class="dropdown-item" onclick="isDelivery = true; generateTable(true, status)">Delivery</button>
+                <button class="dropdown-item" onclick="isDelivery = false; generateTable(false, status)">Reception
+                </button>
             </div>
         </div>
-    </a>
-    
-    <a href="javascript:void(0)">
-        <div class="item" onclick="generateTable(false);"
-            style="margin-right: 30px; margin-left: 30px;background-image: url('../../assets/icons/delivery.png')">
-            <div class="title-item">
-                <span style="text-align: center;width: 100%;"><b>DELIVERY</b></span>
+
+        <div class="dropdown" style="margin-right: 10px">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Status
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <div>
+                    <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(0)" checked="status.includes(0)">
+                    Waiting
+                </div>
+
+                <div>
+                    <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(1)" checked="status.includes(1)">
+                    Taken
+                </div>
+
+                <div>
+                    <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(2)" checked="status.includes(2)">
+                    In Progress
+                </div>
+
+                <div>
+                    <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(3)" checked="status.includes(3)">
+                    Done
+                </div>
+
+                <div>
+                    <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(4)" checked="status.includes(4)">
+                    Canceled
+                </div>
+
             </div>
         </div>
-    </a>
+    </div>
 </div>
 
-<div id="data-content" style="display: none">
 
-    <table id="table_dashboard" class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Date</th>
-                <th scope="col">User</th>
-                <th scope="col">Manager</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
+<table id="table_dashboard" class="table" style="margin-top: 20px">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Date</th>
+        <th scope="col">User</th>
+        <th scope="col">Manager</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
 
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="" onclick="page--;generateTable();return false;" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#" id="page-display">1</a></li>
-            <li class="page-item">
-                <a class="page-link" href="" onclick="page++;generateTable();return false;" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="" onclick="page--;generateTable(isDelivery, status);return false;"
+               aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#" id="page-display">1</a></li>
+        <li class="page-item">
+            <a class="page-link" href="" onclick="page++;generateTable(isDelivery, status);return false;"
+               aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
 </div>
+

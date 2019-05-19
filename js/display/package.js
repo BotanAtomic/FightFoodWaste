@@ -125,7 +125,7 @@ function fillTable(clear) {
     });
 }
 
-function generateTable(isDelivery) {
+function generateTable(isDelivery, status) {
     if (isUserLogged()) {
         $('#page-display').html(page);
         let skip = (limit * (page - 1));
@@ -136,7 +136,7 @@ function generateTable(isDelivery) {
         // Show table 
         $("#data-content").removeAttr("style");
 
-        getPackageRequest(getUserInfo("token"),isDelivery, skip, limit, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
+        getPackageRequest(getUserInfo("token"),isDelivery, skip, limit, status, onPackageSuccess, onPackageFailed);
     } else {
         window.location = "../login";
     }
