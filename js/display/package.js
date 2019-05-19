@@ -22,7 +22,7 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
 
     L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
@@ -131,12 +131,12 @@ function generateTable(isDelivery, status) {
         let skip = (limit * (page - 1));
 
         // Hide class menu 
-        $("#selection-content").css("display","none");
+        $("#selection-content").css("display", "none");
 
         // Show table 
         $("#data-content").removeAttr("style");
 
-        getPackageRequest(getUserInfo("token"),isDelivery, skip, limit, status, onPackageSuccess, onPackageFailed);
+        getPackageRequest(getUserInfo("token"), isDelivery, skip, limit, status, false, onPackageSuccess, onPackageFailed);
     } else {
         window.location = "../login";
     }

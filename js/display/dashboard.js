@@ -114,21 +114,3 @@ function fillTable(clear) {
         counter--;
     });
 }
-
-function generateTableAdmin() {
-    if (isUserLogged() && getUserInfo("permission") == 1) {
-        getPackageRequest(getUserInfo("token"), true, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
-    }
-    else {
-        window.location = "../login";
-    }
-}
-
-function generateTableUser() {
-    if (isUserLogged() && getUserInfo("permission") == 0) {
-        getPackageRequest(getUserInfo("token"), false, [0, 1, 2, 3, 4], onPackageSuccess, onPackageFailed);
-    }
-    else {
-        window.location = "../login";
-    }
-}

@@ -19,14 +19,14 @@ function getLocations(itinerary) {
         console.log(package);
         locations.push(
             {
-                latLng: { lat: package.location[0], lng: package.location[1] }
+                latLng: {lat: package.location[0], lng: package.location[1]}
             }
         );
     });
 
     locations.push(
         {
-            latLng: { lat: itinerary[0].warehouses.location[0], lng: itinerary[0].warehouses.location[1] }
+            latLng: {lat: itinerary[0].warehouses.location[0], lng: itinerary[0].warehouses.location[1]}
         }
     );
 
@@ -35,7 +35,7 @@ function getLocations(itinerary) {
 
 function createItinerarys(map) {
 
-    const warehouses = [... new Set(list.map(package => package.warehouses.city))];
+    const warehouses = [...new Set(list.map(package => package.warehouses.city))];
 
     warehouses.forEach(warehouse => {
         const itinerary = list.filter(package => package.warehouses.city == warehouse);
@@ -59,7 +59,7 @@ function createItinerarys(map) {
                     popupAnchor: [0, -29]
                 });
 
-                marker = L.marker(location.latLng, { icon: custom_icon })
+                marker = L.marker(location.latLng, {icon: custom_icon})
                     .bindPopup(location.adminArea5 + ' ' + location.adminArea3)
                     .openPopup()
                     .addTo(map);
@@ -78,7 +78,7 @@ function createItinerarys(map) {
                     popupAnchor: [0, -29]
                 });
 
-                marker = L.marker(location.latLng, { icon: custom_icon })
+                marker = L.marker(location.latLng, {icon: custom_icon})
                     .bindPopup(location.adminArea5 + ' ' + location.adminArea3)
                     .openPopup()
                     .addTo(map);
@@ -93,7 +93,7 @@ function createItinerarys(map) {
             draggable: false,
             ribbonOptions: {
                 draggable: false,
-                ribbonDisplay: { color: '#CC0000', opacity: 0.3 },
+                ribbonDisplay: {color: '#CC0000', opacity: 0.3},
                 widths: [15, 15, 15, 15, 14, 13, 12, 12, 12, 11, 11, 11, 11, 12, 13, 14, 15]
             }
         }));
@@ -117,14 +117,13 @@ function generateMap(isDelivery) {
     if (isUserLogged()) {
 
         // Hide class menu 
-        $("#selection-content").css("display","none");
+        $("#selection-content").css("display", "none");
 
         // Show table 
         $("#map").removeAttr("style");
 
-        getPackageRequest(getUserInfo("token"), isDelivery, 0, 0, [0, 1, 2], onPackageSuccess, onPackageFailed);
-    }
-    else {
+        getPackageRequest(getUserInfo("token"), isDelivery, 0, 0, [1], true, onPackageSuccess, onPackageFailed);
+    } else {
         window.location = "../login";
     }
 }
