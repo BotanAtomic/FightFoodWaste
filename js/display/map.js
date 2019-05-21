@@ -106,7 +106,7 @@ function initMap() {
 
     map = L.map('map', {
         layers: MQ.mapLayer(),
-        center: [38.895345, -77.030101],
+        center: [48.8534, 2.3488],
         zoom: 15
     });
 

@@ -15,6 +15,8 @@
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
+  <link rel="stylesheet" href="../../lib/tags-input/tags-input.css">
+  <script src="../../lib/tags-input/tags-input.js"></script>
 
   <!-- FONT AWESOME -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -26,9 +28,7 @@
 
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 
-  <script>
-    $(document).ready(checkTopButton);
-  </script>
+
 
   <style>
     .bd-placeholder-img {
@@ -68,7 +68,7 @@
           <h4 class="my-0 font-weight-normal">Register</h4>
         </div>
         <div class="card-body">
-          <form id="form_register"  onsubmit="handleRegistration(event)">
+          <form id="form_register" onsubmit="handleRegistration(event)">
             <div class="form-group">
               <label>Email address</label>
               <input type="email" class="form-control" id="form_register_email" aria-describedby="emailHelp"
@@ -96,11 +96,24 @@
             <div class="form-group">
               <label>Account type</label>
               <select class="form-control" id="form_register_type">
-                <option value="0"> Volunteer </option>
                 <option value="1"> Private </option>
                 <option value="2"> Professional </option>
+                <option value="0"> Volunteer </option>
               </select>
             </div>
+
+            <br>
+
+            <div id="tagsDiv" style="display: none" class="form-group">
+              <hr>
+              <label>Skills</label>
+              <input class="form-control" id="form_register_tags" name="hashtags" type="tags" pattern="^#"
+                placeholder="#Tags">
+            </div>
+
+            <br>
+            <hr>
+
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="form_register_agree">
               <label class="form-check-label" for="form_register_agree">Terms of agreement</label>
@@ -118,5 +131,30 @@
 
   </div>
 </body>
+
+<script>
+  [].forEach.call(document.querySelectorAll('input[type="tags"]'), tagsInput);
+
+  $(document).ready(function () {
+    checkTopButton();
+
+    $("#form_register_type").change(function () {
+      var id = $(this).find("option:selected").val();
+      const div = $("#tagsDiv");
+
+      console.log(id);
+      switch (id) {
+        case "0":
+          div.removeAttr("style");
+          break;
+        default:
+          div.attr('style', 'display:none');
+          break;
+      }
+    });
+
+  }
+  );
+</script>
 
 </html>
