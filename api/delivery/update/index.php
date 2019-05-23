@@ -23,12 +23,16 @@ $client = (new MongoDB\Client)->ffw;
 $delivery = DeliveryPattern::getById($client->deliveries, $input['delivery']);
 $permission = UserPattern::getSingleField($client->users, $_id, 'permission');
 
-if ($permission != ADMIN && $delivery->user->root != $_id) {
+if ($permission != ADMIN && $delivery->user->giver != $_id) {
     http_response_code(401);
     return;
 }
 
 $status = $input['status'];
+
+if ($status == TAKEN) {
+    DeliveryPattern::defineManager($client->deliveries, $input['delivery'], $_id);
+}
 
 DeliveryPattern::updateStatus($client->deliveries, $input['delivery'], $status);
 

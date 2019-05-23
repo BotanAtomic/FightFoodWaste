@@ -14,26 +14,32 @@ if (!DeliveryPattern::isValidGetInput($input)) {
     return;
 }
 
+$taken = null;
 
 if (!($_id = isValidToken($input['token']))) {
     http_response_code(401);
     return;
 }
 
-$client = (new MongoDB\Client)->ffw;
 
-if ($input['all']) {
-    $permission = UserPattern::getSingleField($client->users, $_id, 'permission');
-
-    if ($permission != ADMIN) {
-        http_response_code(401);
-        return;
-    }
+if (isset($input['taken']) && $input['taken']) {
+    $taken = $_id;
 }
 
+$client = (new MongoDB\Client)->ffw;
+
+/**if ($input['all']) {
+ * $permission = UserPattern::getSingleField($client->users, $_id, 'permission');
+ *
+ * if ($permission != ADMIN) {
+ * http_response_code(401);
+ * return;
+ * }
+ * }**/
+
 echo DeliveryPattern::formatMultiple(
-    DeliveryPattern::get($client->deliveries, $_id,
-        $input['all'], $input['status'], $input['skip'], $input["limit"]), $client
+    DeliveryPattern::get($client->deliveries,
+        $input['reception'], $input['status'], $input['skip'], $input["limit"], $taken), $client
 );
 
 

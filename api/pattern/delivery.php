@@ -1,5 +1,7 @@
 <?php
 
+use MongoDB\BSON\ObjectId;
+
 define("WAITING", 0);// grey
 define("TAKEN", 1);// blue
 define("IN_PROGRESS", 2);// orange
@@ -22,7 +24,7 @@ class DeliveryPattern {
 
     private static $REQUIRED_GET_FIELDS = [
         'token' => JSON_STRING,
-        'all' => JSON_BOOLEAN,
+        'reception' => JSON_BOOLEAN,
         'status' => JSON_ARRAY,
         'skip' => JSON_NUMBER,
         'limit' => JSON_NUMBER
@@ -55,11 +57,14 @@ class DeliveryPattern {
         ]);
     }
 
-    public static function get($collection, $_id, $all, $status, $skip, $limit) {
+    public static function get($collection, $reception, $status, $skip, $limit, $taken) {
         $params = ['status' => ['$in' => $status]];
+        $params['reception'] = ['$eq' => $reception];
 
-        if (!$all)
-            $params['user.giver'] = $_id;
+        if (isset($taken)) {
+            $params['user.manager'] = ['$eq' => new MongoDB\BSON\ObjectId($taken)];
+        }
+
 
         $cursor = $collection->find($params, ['sort' => ['date.creation' => -1],
             'limit' => $limit, 'skip' => $skip]);
@@ -78,8 +83,22 @@ class DeliveryPattern {
             ['$set' => ['status' => $status]]);
     }
 
+    public static function defineManager($collection, $id, $user) {
+        $collection->updateOne(
+            ['_id' => new MongoDB\BSON\ObjectId($id)],
+            [
+                '$set' => ['user.manager' => new MongoDB\BSON\ObjectId($user)]
+            ]
+        );
+    }
+
     public static function format($data, $client) {
         $giverUser = UserPattern::get($client->users, $data['user']['giver']);
+        $managerUser = null;
+
+        if (isset($data['user']['manager']))
+            $managerUser = UserPattern::get($client->users, $data['user']['manager']);
+
         $warehouses = WarehousePattern::getNearest($client->warehouses, $data['location']['coordinates']);
 
         $base = [
@@ -94,8 +113,13 @@ class DeliveryPattern {
             ],
             'status' => $data['status'],
             'location' => $data['location']['coordinates'],
-            'warehouses' => WarehousePattern::format($warehouses)
+            'warehouses' => WarehousePattern::format($warehouses, $client)
         ];
+
+        if ($managerUser != null) {
+            $base['user']['manager'] = $data['user']['manager']->__toString();
+            $base['user']['manager.name'] = $managerUser['name'] . ' ' . $managerUser['forename'];
+        }
 
         return $base;
     }

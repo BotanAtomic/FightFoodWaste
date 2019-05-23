@@ -14,8 +14,31 @@ class WarehousePattern {
         return $collection->find()->toArray();
     }
 
-    public static function format($data): Array {
-        $stock = isset($data['stock']) ? $data['$stock'] : [];
+    public static function formatStock($stock, $client): Array {
+        $array = [];
+
+        foreach ($stock as $data) {
+            $giverUser = UserPattern::get($client->users, $data['user']['giver']);
+            $base = [
+                'package' => $data['package'],
+                'date' => [
+                    'arrival' => $data['date']['arrival']->__toString(),
+                ],
+                'user' => [
+                    'giver' => $data['user']['giver']->__toString(),
+                    'giver.name' => $giverUser['name'] . ' ' . $giverUser['forename']
+                ],
+            ];
+
+            array_push($array, $base);
+        }
+
+
+        return $array;
+    }
+
+    public static function format($data, $client): Array {
+        $stock = isset($data['stock']) ? self::formatStock($data['stock'], $client) : [];
         return [
             'city' => $data['city'],
             'location' => $data['location']['coordinates'],
@@ -23,11 +46,11 @@ class WarehousePattern {
         ];
     }
 
-    public static function formatMultiple($entities) {
+    public static function formatMultiple($entities, $client) {
         $array = [];
 
         foreach ($entities as $entity) {
-            array_push($array, self::format($entity));
+            array_push($array, self::format($entity, $client));
         }
 
         return json_encode($array);

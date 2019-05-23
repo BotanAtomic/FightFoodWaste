@@ -20,10 +20,10 @@ if (!($_id = isValidToken($input['token']))) {
     return;
 }
 
-$collection = (new MongoDB\Client)->ffw->warehouses;
+$client = (new MongoDB\Client)->ffw;
 
 
-echo WarehousePattern::formatMultiple(WarehousePattern::get($collection));
+echo WarehousePattern::formatMultiple(WarehousePattern::get($client->warehouses), $client);
 
 
 
