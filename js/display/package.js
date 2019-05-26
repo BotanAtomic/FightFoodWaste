@@ -2,6 +2,19 @@ let list = null;
 let page = 1;
 let limit = 40;
 
+function handleSocket(data) {
+    if (data.message === "add_package") {
+        if (data.package) {
+            let package = JSON.parse(data.package);
+            list.unshift(package);
+            fillTable(true);
+        }
+    }
+    else if (data === "update_package") {
+        generateTable(isDelivery, status);
+    }
+}
+
 function onPackageSuccess(data) {
     list = JSON.parse(data);
 
@@ -15,6 +28,7 @@ function onPackageFailed(errorCode) {
 
 function onPackageUpdateSuccess(data, id, status) {
     updateTableElement(id, "status", status);
+    socket.emit("broadcast", "update_package");
 }
 
 function onPackageUpdateFailed(errorCode) {
@@ -22,7 +36,7 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
     L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
