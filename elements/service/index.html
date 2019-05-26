@@ -1,0 +1,36 @@
+
+<div id="search-services">
+    <!-- Search through services -->
+    <div id="tagsDiv">
+        <hr>
+        <label>Skills</label>
+        <input class="form-control" id="form_register_tags" name="hashtags" type="tags" pattern="^#"
+            placeholder="#Tags">
+    </div>
+</div>
+
+
+<div>
+    <!-- Table services -->
+    <table id="table-services"  class="table" style="margin-top: 20px">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">Email</th>
+                <th scope="col">Distance</th>
+                <th scope="col">Skills</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+        [].forEach.call(document.querySelectorAll('input[type="tags"]'), tagsInput); 
+       generateService();
+</script>

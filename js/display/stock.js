@@ -99,7 +99,6 @@ function getPackageList(city, packages) {
                                 openTr.append(`<th scope='row'> ${counter} </th>`);
                                 openTr.append(`<td> Received Date : ${date} </td>`);
                                 openTr.append(`<td> Giver : ${userName} </td>`);
-                                openTr.append(`<td> <i class="far fa-share-square"></i> </td>`);
 
                                 opentBody.append(openTr);
 

@@ -32,8 +32,7 @@ function loadPackages() {
     }
 }
 
-function loadStocks()
-{
+function loadStocks() {
     if (isUserLogged()) {
         $("#stock-content").load("../../elements/stock/index.html");
     } else {
@@ -41,12 +40,18 @@ function loadStocks()
     }
 }
 
-function loadMap()
-{
-    if(isUserLogged())
-    {
+function loadMap() {
+    if (isUserLogged()) {
         $("#map-content").load("../../elements/map/index.html");
-    }else {
+    } else {
+        window.location = "../login";
+    }
+}
+
+function loadServices() {
+    if(isUserLogged()){
+        $("#service-content").load("../../elements/service/index.html");
+    } else {
         window.location = "../login";
     }
 }

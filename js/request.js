@@ -39,20 +39,20 @@ function getProductName(id, callback) {
 
 function getLatLong(address) {
     return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", `http://www.mapquestapi.com/geocoding/v1/address?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95&location=${address}`, true);
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", `http://www.mapquestapi.com/geocoding/v1/address?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95&location=${address}`, true);
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4)
-                    if (xhr.status === 200) {
-                        resolve(JSON.parse(xhr.responseText)['results'][0]['locations'][0]['latLng']);
-                    } else {
-                        return null;
-                    }
-            };
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4)
+                if (xhr.status === 200) {
+                    resolve(JSON.parse(xhr.responseText)['results'][0]['locations'][0]['latLng']);
+                } else {
+                    return null;
+                }
+        };
 
-            xhr.send(null);
-        }
+        xhr.send(null);
+    }
     );
 }
 
@@ -75,11 +75,19 @@ async function getAddressRequest(coordinates) {
 /***********************************User Request******************************************* */
 
 function loginRequest(email, password, callback, error) {
-    doRequest("user/login/", "POST", {email, password}, callback, error);
+    doRequest("user/login/", "POST", { email, password }, callback, error);
 }
 
 function registerRequest(name, forename, email, type, location, password, callback, error) {
-    doRequest("user/register/", "POST", {email, password, name, forename, type, location}, callback, error);
+    doRequest("user/register/", "POST", { email, password, name, forename, type, location }, callback, error);
+}
+
+/**************************************************************************************** */
+
+/***********************************Service Request******************************************* */
+
+function getServiceRequest(token, skills, callback, error) {
+    doRequest("user/services/", "POST", { token, skills }, callback, error);
 }
 
 /**************************************************************************************** */
@@ -88,19 +96,19 @@ function registerRequest(name, forename, email, type, location, password, callba
 /***********************************Packages Request******************************************* */
 
 function createPackageRequest(token, package, callback, error) {
-    doRequest("delivery/create/", "POST", {token, package}, callback, error);
+    doRequest("delivery/create/", "POST", { token, package }, callback, error);
 }
 
 function getPackageRequest(token, reception, skip, limit, status, taken, callback, error) {
-    doRequest("delivery/get/", "POST", {token, reception, status, skip, limit, taken}, callback, error);
+    doRequest("delivery/get/", "POST", { token, reception, status, skip, limit, taken }, callback, error);
 }
 
 function updatePackageRequest(token, delivery, status, callback, error) {
-    doRequest("delivery/update/", "POST", {token, delivery, status}, callback, error, delivery, status)
+    doRequest("delivery/update/", "POST", { token, delivery, status }, callback, error, delivery, status)
 }
 
 function getStockRequest(token, callback, error) {
-    doRequest("warehouse/get/", "POST", {token}, callback, error);
+    doRequest("warehouse/get/", "POST", { token }, callback, error);
 }
 
 /**************************************************************************************** */
