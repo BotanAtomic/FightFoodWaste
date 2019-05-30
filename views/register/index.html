@@ -15,20 +15,20 @@
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-  <link rel="stylesheet" href="../../lib/tags-input/tags-input.css">
-  <script src="../../lib/tags-input/tags-input.js"></script>
-
   <!-- FONT AWESOME -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-  <script src="../../js/request.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../lib/tag/tagsinput.css">
+
+
+    <script src="../../js/request.js"></script>
   <script src="../../js/user.js"></script>
   <script src="../../js/display/utils.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 
-
+  <script src="../../lib/tag/tagsinput.js"></script>
 
   <style>
     .bd-placeholder-img {
@@ -104,17 +104,16 @@
 
             <br>
 
-            <div id="tagsDiv" style="display: none" class="form-group">
+            <div style="display: none" id="tagsDiv" class="form-group">
               <hr>
               <label>Skills</label>
-              <input class="form-control" id="form_register_tags" name="hashtags" type="tags" pattern="^#"
-                placeholder="#Tags">
+                <input placeholder="Enter skills" id="skills" type="text" data-role="tagsinput" style="display: none;">
             </div>
 
             <br>
             <hr>
 
-            <div class="form-check">
+            <div style="display: none" class="form-check">
               <input type="checkbox" class="form-check-input" id="form_register_agree">
               <label class="form-check-label" for="form_register_agree">Terms of agreement</label>
             </div>
@@ -133,8 +132,6 @@
 </body>
 
 <script>
-  [].forEach.call(document.querySelectorAll('input[type="tags"]'), tagsInput);
-
   $(document).ready(function () {
     checkTopButton();
 

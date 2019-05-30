@@ -78,8 +78,8 @@ function loginRequest(email, password, callback, error) {
     doRequest("user/login/", "POST", { email, password }, callback, error);
 }
 
-function registerRequest(name, forename, email, type, location, password, callback, error) {
-    doRequest("user/register/", "POST", { email, password, name, forename, type, location }, callback, error);
+function registerRequest(name, forename, email, type, location, password, skills, callback, error) {
+    doRequest("user/register/", "POST", { email, password, name, forename, type, location, skills }, callback, error);
 }
 
 /**************************************************************************************** */

@@ -42,10 +42,10 @@ function generateTable(clear){
     });
 }
 
-function generateService() {
+function generateService(skills) {
     if (isUserLogged()) {
 
-        getServiceRequest(getUserInfo("token"), ["Elec","Plomberie"], onServiceSuccess, onServiceFailed);
+        getServiceRequest(getUserInfo("token"), skills, onServiceSuccess, onServiceFailed);
 
     } else {
         window.location = "../login";

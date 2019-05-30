@@ -11,6 +11,7 @@ function handleLogin(event) {
 }
 
 function handleRegistration(event) {
+    console.log("Register");
     event.preventDefault();
 
     let email = $("#form_register_email").val();
@@ -19,12 +20,18 @@ function handleRegistration(event) {
     let password = $("#form_register_password").val();
     let type = $("#form_register_type").val();
     let address = $("#form_register_address").val();
-
     let agreement = $("#form_register_email").val();
+    let skills = $("#skills").val();
+
+    if(+type === 0) {
+        skills = skills.toLowerCase().split(",");
+    } else {
+        skills = [];
+    }
 
    getLatLong(address).then(coordinates=>{
-        if (email && name && forename && password && agreement && address != undefined){
-            registerRequest(name, forename, email, type,[coordinates.lat,coordinates.lng], password, onRegister, onRegisterFailed);
+        if (email && name && forename && password && agreement && address){
+            registerRequest(name, forename, email, type,[coordinates.lat,coordinates.lng], password,skills, onRegister, onRegisterFailed);
         }
     });
 }
