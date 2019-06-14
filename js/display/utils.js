@@ -12,6 +12,10 @@ function loadNavBar() {
     $("header").load("../../elements/navbar.html");
 }
 
+function loadFooter(){
+    $("footer").load("../../elements/footer.html");
+}
+
 function loadDashboard() {
     if (isUserLogged()) {
         if (getUserInfo('type') === 1 || getUserInfo('permission') === 1) {
@@ -33,7 +37,7 @@ function loadPackages() {
 }
 
 function loadStocks() {
-    if (isUserLogged()) {
+    if (isUserLogged() && getUserInfo('permission') === 1) {
         $("#stock-content").load("../../elements/stock/index.html");
     } else {
         window.location = "../login";
@@ -49,9 +53,24 @@ function loadMap() {
 }
 
 function loadServices() {
-    if(isUserLogged()){
+    if (isUserLogged()) {
         $("#service-content").load("../../elements/service/index.html");
     } else {
+        window.location = "../login";
+    }
+}
+function loadAccount() {
+    if (isUserLogged()) {
+        $("#account-content").load("../../elements/account/user.html");
+    } else {
+        window.location = "../login";
+    }
+}
+
+function loadUsers(){
+    if(isUserLogged() && getUserInfo('permission') === 1){
+       $("#users-content").load("../../elements/users/index.html")
+    }else {
         window.location = "../login";
     }
 }

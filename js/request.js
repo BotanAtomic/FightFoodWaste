@@ -56,14 +56,23 @@ function getLatLong(address) {
     );
 }
 
-async function getAddressRequest(coordinates) {
+async function getAddressRequest(coordinates, city) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", `http://www.mapquestapi.com/geocoding/v1/address?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95&location=${coordinates[0]},${coordinates[1]}&includeRoadMetadata=true&includeNearestIntersection=true`, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4)
                 if (xhr.status === 200) {
-                    resolve(JSON.parse(xhr.responseText)['results'][0]['locations'][0]['street']);
+
+                    let data = JSON.parse(xhr.responseText)['results'][0]['locations'][0];
+
+                    console.log(data);
+                    if (city) {
+                        resolve(data['street'] + " " + data['adminArea5']);
+                    } else {
+                        resolve(data['street']);
+                    }
+                    resolve();
                 } else {
                     resolve(null);
                 }
@@ -114,3 +123,14 @@ function getStockRequest(token, callback, error) {
 /**************************************************************************************** */
 
 
+/***********************************Other Request******************************************* */
+
+function sendMailServiceRequest(token, mail, skills, callback, error) {
+    doRequest("mail/service/", "POST", { token, mail, skills }, callback, error);
+}
+
+function getAllUsersRequest(token,callback,error){
+    doRequest("user/all/","POST",{token},callback,error);
+}
+
+/**************************************************************************************** */

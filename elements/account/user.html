@@ -1,0 +1,53 @@
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 id="title-name" class="display-4">Hello </h1>
+    <p class="lead"> Quickly change your information !</p>
+</div>
+
+<div class="container">
+    <div class="card-deck card-connect mb-3 text-center">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Update</h4>
+            </div>
+            <div class="card-body">
+                <form id="form_register" onsubmit="handleUpdate(event)">
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <input type="email" class="form-control" id="form_register_email" aria-describedby="emailHelp"
+                            placeholder="Enter email" required>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                            else.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" id="form_register_password" placeholder="Password"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="address" class="form-control" id="form_register_address" placeholder="Address"
+                            required>
+                    </div>
+
+                    <br>
+
+                    <div id="tagsDiv" class="form-group">
+                        <hr>
+                        <label>Skills</label>
+                        <input placeholder="Enter skills" id="skills" type="text" data-role="tagsinput"
+                            style="display: none;">
+                    </div>
+
+                    <hr>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div>

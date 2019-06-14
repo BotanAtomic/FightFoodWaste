@@ -23,23 +23,21 @@ function handleRegistration(event) {
     let agreement = $("#form_register_email").val();
     let skills = $("#skills").val();
 
-    if(+type === 0) {
+    if (+type === 0) {
         skills = skills.toLowerCase().split(",");
     } else {
         skills = [];
     }
 
-   getLatLong(address).then(coordinates=>{
-        if (email && name && forename && password && agreement && address){
-            registerRequest(name, forename, email, type,[coordinates.lat,coordinates.lng], password,skills, onRegister, onRegisterFailed);
+    getLatLong(address).then(coordinates => {
+        if (email && name && forename && password && agreement && address) {
+            registerRequest(name, forename, email, type, [coordinates.lat, coordinates.lng], password, skills, onRegister, onRegisterFailed);
         }
     });
 }
 
 function onLogin(data) {
     user = JSON.parse(data);
-
-
     window.sessionStorage.setItem('user', data);
 
     window.location = "../dashboard";

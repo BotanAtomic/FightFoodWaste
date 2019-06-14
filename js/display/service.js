@@ -16,6 +16,25 @@ function onServiceFailed(error) {
     alert("Failed getting services : ", error);
 }
 
+function onMailSuccess(data){
+    alert("Success mail" + data);
+}
+
+function onMailError(error){
+    alert("Could not send the email : " + error);
+}
+
+function sendEmail(email){
+    console.log("Sending email : " + email);
+
+    let skills = $("#skills").val();
+    skills = skills.toLowerCase().split(",");
+
+    if(skills) {
+        sendMailServiceRequest(getUserInfo("token"),email,skills,onMailSuccess,onMailError); 
+    }
+}
+
 function generateTable(clear){
     if(clear){
         $("#table-services").find("tbody").empty();
@@ -32,10 +51,9 @@ function generateTable(clear){
 
         tr.append(`<th> ${counter}  </th>`);
         tr.append(`<th> ${user.forename} ${user.name} </th>`);
-        tr.append(`<th> ${user.email} </th>`);
-        tr.append(`<th> ${ Math.round(user.distance) } m </th>`);
+        tr.append(`<th> ${ Math.round(user.distance/1000) } Km </th>`);
         tr.append(`<th> ${user.skills} </th>`);
-        tr.append(`<th> Action </th>`);
+        tr.append(`<th> <a href="#" onclick="sendEmail('${user.email}',)" > <i class="fa fa-envelope-square fa-2x"></i> </a> </th>`);
 
         counter++;
         tbody.append(tr);

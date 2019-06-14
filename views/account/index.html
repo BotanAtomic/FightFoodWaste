@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Paul Botan Jeremy">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Fight food waste</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../styles/main.css">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../../lib/tag/tagsinput.css">
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+
+
+    <script src="../../js/request.js"></script>
+    <script src="../../js/user.js"></script>
+    <script src="../../js/display/utils.js"></script>
+    <script src="../../js/display/account.js"> </script>
+
+
+    <script src="../../lib/tag/tagsinput.js"></script>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <script>
+            loadNavBar();
+        </script>
+    </header>
+
+    <div id="account-content">
+
+    </div>
+
+    <script>
+        loadAccount();
+    </script>
+
+    <footer>
+        <script>
+            loadFooter();
+        </script>
+    </footer>
+</body>
+
+<script>
+    $(document).ready(function () {
+        checkTopButton();
+
+        $("#form_register_type").change(function () {
+            var id = $(this).find("option:selected").val();
+            const div = $("#tagsDiv");
+
+            console.log(id);
+            switch (id) {
+                case "0":
+                    div.removeAttr("style");
+                    break;
+                default:
+                    div.attr('style', 'display:none');
+                    break;
+            }
+        });
+
+    }
+    );
+</script>
+
+</html>

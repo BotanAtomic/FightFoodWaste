@@ -164,7 +164,6 @@ function onStockFailed(errorCode) {
 
 function generateTable() {
     if (isUserLogged()) {
-
         getStockRequest(getUserInfo("token"), onStockSuccess, onStockFailed);
     } else {
         window.location = "../login";
