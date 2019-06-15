@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="534.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ffw.core.MenuController">
+   <children>
+      <HBox alignment="CENTER" layoutX="300.0" layoutY="-3.0" onMouseClicked="#validate" prefHeight="389.0" prefWidth="799.0" AnchorPane.bottomAnchor="122.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="menuText" alignment="CENTER" prefWidth="310.0" text="&#10;&#10;" textFill="#5e5e5e" wrapText="true">
+               <font>
+                  <Font name="System Italic" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Label fx:id="nutrimentsText" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" text="Energy: 0 kJ&#10;Fat: 0g&#10;Carbohydrates: 0g&#10;Protein: 0g&#10;Fiber: 0g&#10;Salt: 0g&#10;Sugar: 0g" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="50.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="6.0" text="Nutriments" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#generateMenu" style="-fx-background-color: grey; -fx-text-fill: white;" text="NEW MENU" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="6.0" />
+      <Button mnemonicParsing="false" onMouseClicked="#validate" style="-fx-background-color: green; -fx-text-fill: white;" text="VALIDATE" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="6.0" />
+      <ScrollPane hbarPolicy="NEVER" layoutY="460.0" prefHeight="122.0" prefWidth="200.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <content>
+            <HBox fx:id="imageContainer" alignment="CENTER_LEFT" prefHeight="122.0" prefWidth="1280.0" spacing="20.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
