@@ -20,39 +20,41 @@ function doRequest(api, method, data, onSuccess, onError, ...args) {
 }
 
 
-function getProductName(id, callback) {
-    let xhr = new XMLHttpRequest();
-
-    xhr.open("GET", `https://ssl-api.openfoodfacts.org/api/product/produit/${id}.json`, true);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4)
-            if (xhr.status === 200) {
-                callback(JSON.parse(xhr.responseText)['product']['product_name']);
-            } else {
-                callback('Error');
-            }
-    };
-
-    xhr.send(null);
-}
-
-function getLatLong(address) {
-    return new Promise(function (resolve, reject) {
+function getProductName(id) {
+    return new Promise((resolve => {
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", `http://www.mapquestapi.com/geocoding/v1/address?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95&location=${address}`, true);
+
+        xhr.open("GET", `https://ssl-api.openfoodfacts.org/api/product/produit/${id}.json`, true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4)
                 if (xhr.status === 200) {
-                    resolve(JSON.parse(xhr.responseText)['results'][0]['locations'][0]['latLng']);
+                    resolve(JSON.parse(xhr.responseText)['product']['product_name']);
                 } else {
-                    return null;
+                    resolve('Error');
                 }
         };
 
         xhr.send(null);
-    }
+    }));
+}
+
+async function getLatLong(address) {
+    return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", `http://www.mapquestapi.com/geocoding/v1/address?key=xuGbj2MRwsC0IxUyeVuVyab2xflOZX95&location=${address}`, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4)
+                    if (xhr.status === 200) {
+                        resolve(JSON.parse(xhr.responseText)['results'][0]['locations'][0]['latLng']);
+                    } else {
+                        return null;
+                    }
+            };
+
+            xhr.send(null);
+        }
     );
 }
 
@@ -66,7 +68,6 @@ async function getAddressRequest(coordinates, city) {
 
                     let data = JSON.parse(xhr.responseText)['results'][0]['locations'][0];
 
-                    console.log(data);
                     if (city) {
                         resolve(data['street'] + " " + data['adminArea5']);
                     } else {
@@ -84,11 +85,15 @@ async function getAddressRequest(coordinates, city) {
 /***********************************User Request******************************************* */
 
 function loginRequest(email, password, callback, error) {
-    doRequest("user/login/", "POST", { email, password }, callback, error);
+    doRequest("user/login/", "POST", {email, password}, callback, error);
 }
 
 function registerRequest(name, forename, email, type, location, password, skills, callback, error) {
-    doRequest("user/register/", "POST", { email, password, name, forename, type, location, skills }, callback, error);
+    doRequest("user/register/", "POST", {email, password, name, forename, type, location, skills}, callback, error);
+}
+
+function updateRequest(token, email, password, skills, location, callback, error) {
+    doRequest("user/update/", "POST", {token, email, password, skills, location,}, callback, error);
 }
 
 /**************************************************************************************** */
@@ -96,7 +101,7 @@ function registerRequest(name, forename, email, type, location, password, skills
 /***********************************Service Request******************************************* */
 
 function getServiceRequest(token, skills, callback, error) {
-    doRequest("user/services/", "POST", { token, skills }, callback, error);
+    doRequest("user/services/", "POST", {token, skills}, callback, error);
 }
 
 /**************************************************************************************** */
@@ -105,19 +110,19 @@ function getServiceRequest(token, skills, callback, error) {
 /***********************************Packages Request******************************************* */
 
 function createPackageRequest(token, package, callback, error) {
-    doRequest("delivery/create/", "POST", { token, package }, callback, error);
+    doRequest("delivery/create/", "POST", {token, package}, callback, error);
 }
 
 function getPackageRequest(token, reception, skip, limit, status, taken, callback, error) {
-    doRequest("delivery/get/", "POST", { token, reception, status, skip, limit, taken }, callback, error);
+    doRequest("delivery/get/", "POST", {token, reception, status, skip, limit, taken}, callback, error);
 }
 
 function updatePackageRequest(token, delivery, status, callback, error) {
-    doRequest("delivery/update/", "POST", { token, delivery, status }, callback, error, delivery, status)
+    doRequest("delivery/update/", "POST", {token, delivery, status}, callback, error, delivery, status)
 }
 
 function getStockRequest(token, callback, error) {
-    doRequest("warehouse/get/", "POST", { token }, callback, error);
+    doRequest("warehouse/get/", "POST", {token}, callback, error);
 }
 
 /**************************************************************************************** */
@@ -126,11 +131,11 @@ function getStockRequest(token, callback, error) {
 /***********************************Other Request******************************************* */
 
 function sendMailServiceRequest(token, mail, skills, callback, error) {
-    doRequest("mail/service/", "POST", { token, mail, skills }, callback, error);
+    doRequest("mail/service/", "POST", {token, mail, skills}, callback, error);
 }
 
-function getAllUsersRequest(token,callback,error){
-    doRequest("user/all/","POST",{token},callback,error);
+function getAllUsersRequest(token, callback, error) {
+    doRequest("user/all/", "POST", {token}, callback, error);
 }
 
 /**************************************************************************************** */

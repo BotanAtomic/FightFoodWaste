@@ -10,25 +10,29 @@
                 <h4 class="my-0 font-weight-normal">Update</h4>
             </div>
             <div class="card-body">
+                <p id="request_message" style="color:green;display: none">Your information has been updated</p>
                 <form id="form_register" onsubmit="handleUpdate(event)">
                     <div class="form-group">
                         <label>Email address</label>
                         <input type="email" class="form-control" id="form_register_email" aria-describedby="emailHelp"
-                            placeholder="Enter email" required>
+                               placeholder="Enter email" required>
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                            else.</small>
+                            else.
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" class="form-control" id="form_register_password" placeholder="Password"
-                            required>
+                        <small id="passwordHelp" class="form-text text-muted">(Edit only if you want to change
+                            password)
+                        </small>
+                        <input type="password" class="form-control" id="form_register_password" placeholder="Password">
                     </div>
 
                     <div class="form-group">
                         <label>Address</label>
                         <input type="address" class="form-control" id="form_register_address" placeholder="Address"
-                            required>
+                               required>
                     </div>
 
                     <br>
@@ -37,7 +41,7 @@
                         <hr>
                         <label>Skills</label>
                         <input placeholder="Enter skills" id="skills" type="text" data-role="tagsinput"
-                            style="display: none;">
+                               style="display: none;">
                     </div>
 
                     <hr>

@@ -46,20 +46,21 @@ function addMap(mapID, location) {
     }).addTo(macarte);
 }
 
-function addPackageList(id, package) {
+async function addPackageList(id, package) {
     const tBody = $("#" + id);
 
     const data = {};
 
     package.forEach(item => data[item] ? data[item]++ : data[item] = 1);
 
-    Object.keys(data).forEach(async item => {
+    Object.keys(data).forEach(item => {
         const tr = $("<tr></tr>");
-        await getProductName(item, (name) => {
+        getProductName(item).then(name => {
             tr.append(`<th scope='row'>${data[item]}x</th>`);
             tr.append(`<td> ${name}</td> `);
+            tBody.append(tr);
         });
-        tBody.append(tr);
+
     });
 }
 

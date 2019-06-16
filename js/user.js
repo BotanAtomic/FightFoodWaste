@@ -11,7 +11,6 @@ function handleLogin(event) {
 }
 
 function handleRegistration(event) {
-    console.log("Register");
     event.preventDefault();
 
     let email = $("#form_register_email").val();

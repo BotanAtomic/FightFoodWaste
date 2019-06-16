@@ -1,122 +1,112 @@
 let list = [];
-let open = {};
 
-function onStockSuccess(data) {
+const products = {};
+
+async function onStockSuccess(data) {
     if (data) {
         list = JSON.parse(data);
 
-        list.forEach(warehouse => {
-            open[warehouse.city] = {};
-        })
+        for (const warehouse of list) {
+            warehouse.locationName = await getAddressRequest(warehouse.location);
+            products[warehouse.locationName] = {};
+
+            for (const product of warehouse.stock) {
+                for (const productId of product.package) {
+                    if (products[warehouse.locationName][productId]) {
+                        let obj = products[warehouse.locationName][productId];
+                        obj.quantity++;
+
+                        if (!obj.information.some(i => i.date === +product.date.arrival)) {
+                            obj.information.push({
+                                date: +product.date.arrival, giver: product.user['giver.name']
+                            });
+                        }
+
+                    } else {
+                        products[warehouse.locationName][productId] = {
+                            quantity: 1,
+                            name: await getProductName(productId),
+                            id: productId,
+                            information: [
+                                {date: +product.date.arrival, giver: product.user['giver.name']}
+                            ]
+                        }
+                    }
+                }
+            }
+        }
 
         fillTable();
     }
 }
 
-function updateTableElement(city, fields, value) {
-    // Update element status
-    list.forEach(warehouse => {
-        if (warehouse.city === city) {
-            warehouse[fields] = value;
-        }
-    });
+function toggleBody(body, event) {
+    const element = $(document.getElementById(body));
+    const button = $(event.target);
 
-    // Redraw table
-    fillTable(true);
+    if(element.is(":hidden")) {
+        element.show();
+        button.css('color', 'red');
+        button.removeClass("fa-plus-square").addClass("fa-minus-square");
+    } else {
+        element.hide();
+        button.css('color', 'grey');
+        button.removeClass("fa-minus-square").addClass("fa-plus-square");
+    }
 }
 
-function updateOpen(city, product, value) {
-    open[city][product] = value;
-}
+function getPackageList(city, locationName) {
 
-function getPackageList(city, packages) {
+    const localProducts = products[locationName];
 
     const tbody = $(`#div-${city}`).find("tbody");
 
-    const item = {};
-    const data = {};
-
-    packages.forEach(package => {
-
-        let dateobj = new Date(+package.date.arrival).toLocaleString('fr-FR');
-        let userName = package.user["giver.name"];
-
-        if (package.package != undefined) {
-
-            package.package.forEach(product => {
-                data[product] = {
-                    counter: 0,
-                    date: 0,
-                    user: 0,
-                };
-                item[product] ? item[product]++ : item[product] = 1;
-
-                data[product].counter = item[product];
-                data[product].date = dateobj;
-                data[product].user = userName;
-
-            });
-        }
-    });
-
-    Object.keys(data).forEach(async product => {
+    Object.values(localProducts).forEach((value) => {
         const tr = $("<tr></tr>");
 
-        await getProductName(product, (name) => {
-            tr.append(`<th scope='row'>${data[product].counter}x</th>`);
-            tr.append(`<td> ${name}</td> `);
+        tr.append(`<th scope='row'>${value.quantity}x</th>`);
+        tr.append(`<td> ${value.name}</td> `);
 
-            const actionTd = $("<td></td>");
-            !open[city][product] && actionTd.append(`<a style='color:grey' onclick='updateOpen("${city}",${product},true);  fillTable(true);' href='#' class='link_button fas fa-plus-square '> </a>`);
-            open[city][product] && actionTd.append(`<a style='color:red' onclick='updateOpen("${city}",${product},false); fillTable(true);' href='#' class='link_button fas fa-minus-square '> </a>`);
+        const actionTd = $("<td></td>");
 
-            tr.append(actionTd);
+        const openObjectId = `body-${value.id}-${city}`;
+        const openTd = $(`<td id='${openObjectId}' colspan='12'> </td>`);
 
-            if (open[city][product] == true) {
-                const openTd = $("<td colspan='12'> </td>");
-
-                const openTable = $(`
+        const openTable = $(`
                 <table>  
                    
                 </table>`);
-                const opentBody = $(`<tbody> </tbody>`);
-
-                let counter = 1;
-
-                packages.forEach(package => {
-                    if (package.package != undefined) {
+        const openBody = $(`<tbody> </tbody>`);
 
 
-                        package.package.forEach(produit => {
 
-                            if (produit == product) {
+        value.information.forEach((v, i) => {
+            let date = new Date(+v.date).toLocaleString('fr-FR');
+            let userName = v.giver;
 
-                                let date = new Date(+package.date.arrival).toLocaleString('fr-FR');
-                                let userName = package.user["giver.name"];
+            const openTr = $("<tr> </tr>");
 
-                                const openTr = $("<tr> </tr>");
+            openTr.append(`<th scope='row'> ${i} </th>`);
+            openTr.append(`<td> Received Date : ${date} </td>`);
+            openTr.append(`<td> Giver : ${userName} </td>`);
 
-                                openTr.append(`<th scope='row'> ${counter} </th>`);
-                                openTr.append(`<td> Received Date : ${date} </td>`);
-                                openTr.append(`<td> Giver : ${userName} </td>`);
+            openTr.css("border-top", "");
 
-                                opentBody.append(openTr);
-
-                                counter++;
-                            }
-                        });
-                    }
-                });
-
-                openTable.append(opentBody);
-                openTd.append(openTable);
-
-                tbody.append(tr);
-                tbody.append(openTd);
-            }
-
-            !open[city][product] ? tbody.append(tr) : null;
+            openBody.append(openTr);
         });
+
+
+        openTd.hide();
+
+        actionTd.append(`<a style='color:grey' onclick='toggleBody("${openObjectId}", event);' class='link_button fas fa-plus-square'> </a>`);
+
+        tr.append(actionTd);
+
+        openTable.append(openBody);
+        openTd.append(openTable);
+
+        tbody.append(tr);
+        tbody.append(openTd);
     });
 }
 
@@ -125,20 +115,19 @@ let active = 0;
 function fillTable(clear) {
 
     if (clear) {
-        // Clear current table
         $("#tab-title").empty();
         $("#tab-content").empty();
     }
 
     list.sort((a, b) => b.city - a.city).forEach(async (warehouse, i) => {
-
         const li = $("<li class='nav-item'> </li>");
 
-        const a = $(`<a class="nav-link" id="${warehouse.city}-tab" 
-        data-toggle="tab" role="tab" aria-controls="${warehouse.city}">${warehouse.city} [${await getAddressRequest(warehouse.location)}]</a>`);
+        const a = $(`<a class="nav-link" id="${warehouse.city}-tab"
+        data-toggle="tab" role="tab" aria-controls="${warehouse.city}">${warehouse.city} [${warehouse.locationName}]</a>`);
 
-        i == active ? a.addClass("active") : a.removeClass("active");
-        i == active ? a.attr("aria-selected", "true") : a.attr("aria-selected", "false");
+
+        i === active ? a.addClass("active") : a.removeClass("active");
+        i === active ? a.attr("aria-selected", "true") : a.attr("aria-selected", "false");
 
         a.attr("onclick", `active = ${i};fillTable(true);`);
 
@@ -146,11 +135,12 @@ function fillTable(clear) {
         $("#tab-title").append(li);
 
         const div = $(`<div class="tab-pane fade " id="div-${warehouse.city}" role="tabpanel" aria-labelledby="${warehouse.city}-tab"></div>`);
-        i == active ? div.addClass("show active") : null;
+        i === active ? div.addClass("show active") : null;
 
         div.load("../../elements/stock/table.html", function () {
             $("#tab-content").append(div);
-            getPackageList(warehouse.city, warehouse.stock);
+            if (i === active)
+                getPackageList(warehouse.city, warehouse.locationName);
         });
 
     });
