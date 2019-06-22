@@ -36,7 +36,31 @@
         }
     }
 
+    function speak(text) {
+        // Create a new instance of SpeechSynthesisUtterance.
+        var msg = new SpeechSynthesisUtterance();
+
+        // Set the text.
+        msg.text = text;
+
+        // Set the attributes.
+        msg.volume = 1.0;
+        msg.rate = 1;
+        msg.pitch = 1;
+
+
+        msg.voice = speechSynthesis.getVoices().filter(function (voice) { return voice.name.includes("David"); })[0];
+
+
+        // Queue this utterance.
+        window.speechSynthesis.speak(msg);
+    }
+
+
     function addToScene(productCount) {
+
+        speak("New package with " + productCount.toString() + " products");
+
         if (productCount) {
             loadNewCube(productCount);
         }
