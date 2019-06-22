@@ -41,7 +41,7 @@ User *loadUser(char *email, char *password) {
 
     const char *json = json_object_to_json_string(object);
 
-    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8080/backend/api/user/login/");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://51.75.203.112/api/user/login/");
 
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json);
@@ -147,13 +147,13 @@ char postPackage(List *package, const char *token) {
         element = element->next;
     }
 
-
     json_object_object_add(object, "token", json_object_new_string(token));
     json_object_object_add(object, "package", idArray);
+    json_object_object_add(object, "reception", json_object_new_boolean(1));
 
     const char *json = json_object_to_json_string(object);
 
-    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8080/backend/api/delivery/create/");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://51.75.203.112/api/delivery/create/");
 
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json);

@@ -13,8 +13,8 @@ void bindDiscoveryServer(GtkLabel *statusLabel) {
         return;
     }
 
-    memset(&server, 0, sizeof(server));
-    memset(&client, 0, sizeof(client));
+    memset(&server, 0, sizeof(struct sockaddr_in));
+    memset(&client, 0, sizeof(struct sockaddr_in));
 
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
@@ -25,7 +25,7 @@ void bindDiscoveryServer(GtkLabel *statusLabel) {
         return;
     }
 
-    unsigned int len, n;
+    unsigned int len = sizeof(struct sockaddr_in), n;
     char *buffer = malloc(1);
     while ((n = recvfrom(socketPtr, (char *) buffer, 1, MSG_WAITALL, (struct sockaddr *) &client, &len)) != -1) {
         char *address = inet_ntoa(client.sin_addr);

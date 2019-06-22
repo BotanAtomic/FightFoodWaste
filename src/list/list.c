@@ -74,7 +74,6 @@ void listDelete(List *list, void *value) {
                 list->element = element->next;
 
             printf("List delete %s\n", value);
-            free(element);
             break;
         }
 

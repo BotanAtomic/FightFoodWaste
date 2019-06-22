@@ -1,0 +1,4 @@
+/home/botan/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.6183.77/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/botan/Documents/Work/ESGI/FFW/app/C
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/botan/Documents/Work/ESGI/FFW/app/C/cmake-build-debug

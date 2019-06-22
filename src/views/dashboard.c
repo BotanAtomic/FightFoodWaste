@@ -88,7 +88,6 @@ gboolean addInPackage(gpointer data) {
     Product *same = listSearch(package, code);
     Product *product = same == NULL ? loadProduct(code) : same;
 
-
     if (product != NULL) {
         char *labelText = g_strdup_printf("%dx   %s (%s)", same == NULL ? product->quantity : product->quantity + 1,
                                           product->name, product->barcode);

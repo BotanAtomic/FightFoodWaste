@@ -29,8 +29,6 @@ void showLoginScreen() {
 
     gtk_widget_show(window);
 
-    login();
-
     gtk_main();
 }
 
