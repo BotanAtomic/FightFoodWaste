@@ -13,21 +13,38 @@
     href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="../../styles/main.css">
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" />
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
-  <script src="../../js/request.js"></script>
   <script src="../../js/user.js"></script>
   <script src="../../js/display/utils.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <script src="https://unpkg.com/three"></script>
+  <script src="https://unpkg.com/three.texttexture"></script>
+  <script src="https://unpkg.com/three.textsprite"></script>
+  <script src="../../lib/socket.io/socket.io.js"></script>
+
 
   <script>
     $(document).ready(checkTopButton);
   </script>
 
   <style>
+    #canvas {
+      background-color: #000;
+      width: 200px;
+      height: 200px;
+      border: 1px solid black;
+      margin: 100px;
+      padding: 0px;
+      position: static;
+      /* fixed or static */
+      top: 100px;
+      left: 100px;
+    }
+
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
@@ -35,6 +52,14 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+    }
+
+    canvas{
+      position : absolute;
+      top : 8em;
+      left: 0px;
+      width: 100%;
+      height: 100%;
     }
 
     @media (min-width: 768px) {
@@ -53,59 +78,20 @@
     </script>
   </header>
 
-  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Pricing</h1>
-    <p class="lead">Quickly build an effective pricing table for your potential customers with this Bootstrap example.
-      It’s built with default Bootstrap components and utilities with little customization.</p>
+  <div id="webgl-view">
+    <script>
+      loadWebgl();
+    </script>
   </div>
 
-  <div class="container">
-    <div class="card-deck mb-3 text-center">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Volunteer</h4>
-        </div>
-        <div class="card-body">
-          <h1 class="card-title pricing-card-title">Collect </h1>
-          <p>and</p>
-          <h2 class="card-title pricing-card-title">Deliver</h2>
-          <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
-        </div>
-      </div>
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Private</h4>
-        </div>
-        <div class="card-body">
-          <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ year</small></h1>
-          <ul class="list-unstyled mt-3 mb-4">
-            <li>Collect food</li>
-            <li>need a hand ?</li>
-            <li>Get advice !</li>
-          </ul>
-          <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button>
-        </div>
-      </div>
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Professional</h4>
-        </div>
-        <div class="card-body">
-          <h1 class="card-title pricing-card-title">Donate </h1>
-          <p>Having spare food you are going to throw in the bin ? Help your society and give it away. We collect it for
-            you !</p>
-          <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="canvas"> </div>
 
   <footer>
     <script>
       loadFooter();
     </script>
   </footer>
-  
+
 </body>
 
 </html>

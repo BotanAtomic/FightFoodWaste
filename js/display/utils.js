@@ -74,3 +74,7 @@ function loadUsers(){
         window.location = "../login";
     }
 }
+
+function loadWebgl(){
+    $("#webgl-view").load("../../elements/webgl/index.html");
+}

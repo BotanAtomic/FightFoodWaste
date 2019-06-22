@@ -1,0 +1,243 @@
+<script>
+    const GRAVITY = 0.32;
+    let socket;
+    let meshList = {
+        cube: [],
+        sprite: []
+    };
+
+    $(document).ready(function () {
+        socket = io('http://51.75.203.112:2021');
+        socket.on('connect', function () {
+            console.log("Connected socket");
+        });
+        socket.on('event', function (data) {
+            console.log("Event data", data);
+            handleSocket(data);
+        });
+        socket.on('disconnect', function () {
+            console.log("Socket disconnect");
+        });
+
+    });
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function handleSocket(data) {
+
+        let packages = JSON.parse(data.package).package;
+
+        if (packages) {
+            addToScene(packages.length);
+        }
+    }
+
+    function addToScene(productCount) {
+        if (productCount) {
+            loadNewCube(productCount);
+        }
+    }
+
+    // Create the scene and a camera to view it
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+    /**
+    * Camera
+    **/
+
+    // Specify the portion of the scene visiable at any time (in degrees)
+    var fieldOfView = 45;
+
+    // Specify the camera's aspect ratio
+    var aspectRatio = window.innerWidth / window.innerHeight;
+
+    // Specify the near and far clipping planes. Only objects
+    // between those planes will be rendered in the scene
+    // (these values help control the number of items rendered
+    // at any given time)
+    var nearPlane = 0.1;
+    var farPlane = 1000;
+
+    // Use the values specified above to create a camera
+    var camera = new THREE.PerspectiveCamera(
+        fieldOfView, aspectRatio, nearPlane, farPlane
+    );
+
+    // Finally, set the camera's position in the z-dimension
+    camera.position.z = 5;
+
+    /**
+    * Renderer
+    **/
+
+    container = document.getElementById('canvas');
+
+    // Create the canvas with a renderer
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    // Specify the size of the canvas
+    renderer.setSize(700, 700);
+
+    // Add the canvas to the DOM
+    container.appendChild(renderer.domElement);
+
+    // Create a texture loader so we can load our image file
+    var loader = new THREE.TextureLoader();
+
+    /**
+    * Image
+    **/
+
+    function createTextSprite(text, pos) {
+
+        let sprite = new THREE.TextSprite({
+            textSize: 0.5,
+            texture: {
+                text: text,
+                fontFamily: 'Arial, Helvetica, sans-serif',
+            },
+            material: { color: 0x123456 },
+        });
+
+        sprite.position.setX(pos.x);
+        sprite.position.setY(pos.y);
+        sprite.position.setZ(pos.z + 1);
+
+        meshList["sprite"].push(sprite);
+
+        scene.add(sprite);
+
+    }
+
+
+    function loadNewCube(productCount) {
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
+        var material = new THREE.MeshBasicMaterial({
+            map: loader.load('../../assets/images/package.jpg'),
+        });
+        var cube = new THREE.Mesh(geometry, material);
+        cube.position.x = getRandomInt(-3, 3);
+        cube.position.y = 3;
+
+        createTextSprite(productCount.toString(), cube.position);
+
+        meshList["cube"].push(cube);
+        scene.add(cube);
+    }
+    /**
+    * Lights
+    **/
+
+    // Add a point light with #fff color, .7 intensity, and 0 distance
+    var light = new THREE.PointLight(0xffffff, 1, 0);
+
+    // Specify the light's position
+    light.position.set(1, 1, 100);
+
+    // Add the light to the scene
+    scene.add(light)
+
+    /**
+    * Render!
+    **/
+
+
+    function isColliding(pos1, pos2, delta) {
+
+        if (pos1.x == pos2.x) {
+            if ((pos1.y - 1) - (delta * GRAVITY) <= (pos2.y + 1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function removeMesh(mesh, cube) {
+        let index = meshList[mesh].indexOf(cube);
+        if (index !== -1) meshList[mesh].splice(index, 1);
+    }
+
+    function moveMeshDown(mesh, delta) {
+        mesh.position.y -= (delta * GRAVITY);
+    }
+
+    function updateMeshes(delta) {
+
+        let cubeList = meshList["cube"];
+
+        cubeList.forEach(cube => {
+            let position = new THREE.Vector3();
+            position = cube.position;
+
+            if (position.y <= -3) {
+                removeMesh("cube", cube);
+            } else {
+                moveMeshDown(cube, delta);
+            }
+        });
+
+        let spriteList = meshList["sprite"];
+
+        spriteList.forEach(sprite => {
+            let position = new THREE.Vector3();
+            position = sprite.position;
+
+            if (position.y <= -3) {
+                removeMesh("sprite", sprite);
+            } else {
+                moveMeshDown(sprite, delta);
+            }
+
+        });
+    }
+
+    let mouse = {
+        x: 0,
+        y: 0
+    }
+
+    window.addEventListener('resize', onWindowResize, false);
+
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    document.addEventListener('mousedown', onDocumentMouseDown);
+
+    function onDocumentMouseDown(event) {
+        event.preventDefault();
+        var mouse3D = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
+            -(event.clientY / window.innerHeight) * 2 + 1,
+            0.5);
+        var raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse3D, camera);
+        var intersects = raycaster.intersectObjects(meshList["cube"]);
+        console.log(intersects)
+        if (intersects.length > 0) {
+            intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
+        }
+    }
+
+    var clock = new THREE.Clock();
+    var delta = 0;
+
+    // The main animation function that re-renders the scene each animation frame
+    animate();
+    function animate() {
+        requestAnimationFrame(animate);
+        delta = clock.getDelta();
+
+        updateMeshes(delta);
+
+        renderer.render(scene, camera);
+    }
+
+</script>
