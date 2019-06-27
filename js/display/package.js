@@ -9,13 +9,12 @@ function handleSocket(data) {
             list.unshift(package);
             fillTable(true);
         }
-    }
-    else if (data === "update_package") {
+    } else if (data === "update_package") {
         generateTable(isDelivery, status);
     }
 }
 
-function onPackageSuccess(data) {
+async function onPackageSuccess(data) {
     list = JSON.parse(data);
 
     if (list)
@@ -36,7 +35,7 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
 
     L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
@@ -78,6 +77,39 @@ function updateTableElement(id, fields, value) {
 
     // Redraw table
     fillTable(true);
+}
+
+async function downloadSummary() {
+    let userId = getUserInfo("token").substring(10);
+
+    let rawData = "Date, Owner, Latitude, Longitude, Products";
+
+    for (let i of list) {
+        if (i.user.manager === userId && i.status === 3) {
+            let date = new Date(+i.date.creation).toLocaleString('fr-FR');
+
+            rawData += date + "," + i.user["giver.name"] + ",";
+            rawData += i.location + ",";
+
+            for (let packageKey of i.package) {
+                const productName = await getProductName(packageKey);
+                rawData += productName + "; ";
+            }
+
+            rawData += "\n";
+        }
+    }
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(rawData));
+    element.setAttribute('download', "summary.csv");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 }
 
 function fillTable(clear) {
