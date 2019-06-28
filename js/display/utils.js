@@ -1,6 +1,6 @@
 function checkTopButton() {
     if (isUserLogged()) {
-        $("#top-button").html(`Bonjour ${getUserInfo('forename')}`);
+        $("#top-button").html(`Welcome ${getUserInfo('forename')}`);
         $("#top-button").attr('href', '');
         $("#disconnect-button").show();
     } else {

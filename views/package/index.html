@@ -51,8 +51,6 @@
         console.log("Connected socket");
       });
       socket.on('event', function (data) {
-        console.log("Event data", data);
-
         handleSocket(data);
 
       });

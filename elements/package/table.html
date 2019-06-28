@@ -10,6 +10,7 @@
             status.push(s);
         }
 
+        console.log(status);
         generateTable(isDelivery, status);
     }
 
@@ -17,9 +18,11 @@
 
 
 <div id="data-content">
+
     <div style="display: flex;flex-direction: row;">
         <div class="dropdown" style="margin-right: 10px">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
                 Mode
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
@@ -62,9 +65,6 @@
 
             </div>
         </div>
-        <div>
-            <button id="search" onclick="downloadSummary()" type="button" class="btn btn-outline-info">Summary&nbsp;<i class="fa fa-file-csv"></i></button>
-        </div>
     </div>
 </div>
 
@@ -74,7 +74,7 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">Date</th>
-        <th scope="col">Owner</th>
+        <th scope="col">User</th>
         <th scope="col">Manager</th>
         <th scope="col">Status</th>
         <th scope="col">Action</th>

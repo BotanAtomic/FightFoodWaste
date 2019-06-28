@@ -11,13 +11,13 @@ function onUsersFailed(error) {
     alert("Couldn't retrieve users list : " + error);
 }
 
-function fillTable() {
+async function fillTable() {
     let table = $("#table-users");
 
     let counter = 0;
 
-    list.forEach(user => {
-
+    for(let i = 0; i< list.length; i++){
+        let user = list[i];
         const tbody = table.find("tbody:first");
 
         const tr = $("<tr></tr>");
@@ -26,17 +26,18 @@ function fillTable() {
         tr.append(`<td>${user.forename}</td> `);
         tr.append(`<td>${user.name}</td> `);
         tr.append(`<td>${user.email}</td> `);
-        tr.append(`<td>${user.location.coordinates}</td> `);
-        tr.append(`<td>${user.type}</td> `);
-        tr.append(`<td> Action </td> `);
+        const address = await getAddressRequest(user.location, true);
+        tr.append(`<td>${address}</td> `);
+        tr.append(`<td>${TYPE[user.type]}</td> `);
 
         tbody.append(tr);
 
         counter++;
-    });
+    }
+
 }
 
-function generateUsersTable(type) {
+function generateUsersTable() {
     if (isUserLogged()) {
         getAllUsersRequest(getUserInfo("token"), onUsersSuccess, onUsersFailed);
     } else {

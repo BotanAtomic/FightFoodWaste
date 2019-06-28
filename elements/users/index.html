@@ -1,49 +1,10 @@
-<script>
-    let type = [0, 1, 2];
-    generateUsersTable(type);
-
-    function toggleStatus(s) {
-        if (type.includes(s)) {
-            type = status.filter(ss => ss !== s);
-        } else {
-            type.push(s);
-        }
-
-        console.log(type);
-        generateUsersTable(type);
-    }
-</script>
-
-<br><br>
-
-<div style="display: flex;flex-direction: row;">
-
-    <div class="dropdown" style="margin-right: 10px">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Account Type
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <div>
-                <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(0)" checked="status.includes(0)">
-                VOLUNTEER
-            </div>
-
-            <div>
-                <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(1)" checked="status.includes(0)">
-                MERCHANT
-            </div>
-
-            <div>
-                <input type="checkbox" style="margin: 10px;" onclick="toggleStatus(2)" checked="status.includes(4)">
-                INDIVIDUAL
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 
 <br>
+<br>
+
+<script>
+generateUsersTable();
+</script>
 
 <table id="table-users" class="table">
     <thead class="thead-dark">
@@ -54,7 +15,6 @@
             <th scope="col">Email</th>
             <th scope="col">Address</th>
             <th scope="col">Type</th>
-            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>

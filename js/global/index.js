@@ -26,6 +26,13 @@ let STATUS = [
     }
 ];
 
+let TYPE = [
+    "Private",
+    "Professional",
+    "Volunteer"
+];
+
+
 function colourNameToHex(colour)
 {
     var colours = {"aliceblue":"#f0f8ff","antiquewhite":"#faebd7","aqua":"#00ffff","aquamarine":"#7fffd4","azure":"#f0ffff",

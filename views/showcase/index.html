@@ -28,7 +28,10 @@
 
 
   <script>
-    $(document).ready(checkTopButton);
+    $(document).ready(function () {
+      checkTopButton();
+    }
+    );
   </script>
 
   <style>
@@ -54,9 +57,9 @@
       user-select: none;
     }
 
-    canvas{
-      position : absolute;
-      top : 8em;
+    canvas {
+      position: absolute;
+      top: 8em;
       left: 0px;
       width: 100%;
       height: 100%;
@@ -85,12 +88,6 @@
   </div>
 
   <div id="canvas"> </div>
-
-  <footer>
-    <script>
-      loadFooter();
-    </script>
-  </footer>
 
 </body>
 

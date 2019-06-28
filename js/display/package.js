@@ -1,6 +1,6 @@
 let list = null;
 let page = 1;
-let limit = 40;
+let limit = 15;
 
 function handleSocket(data) {
     if (data.message === "add_package") {
@@ -9,12 +9,13 @@ function handleSocket(data) {
             list.unshift(package);
             fillTable(true);
         }
-    } else if (data === "update_package") {
+    }
+    else if (data === "update_package") {
         generateTable(isDelivery, status);
     }
 }
 
-async function onPackageSuccess(data) {
+function onPackageSuccess(data) {
     list = JSON.parse(data);
 
     if (list)
@@ -35,7 +36,7 @@ function onPackageUpdateFailed(errorCode) {
 }
 
 function addMap(mapID, location) {
-    macarte = L.map(mapID, {zoomControl: false}).setView([location[0], location[1]], 11);
+    macarte = L.map(mapID, { zoomControl: false }).setView([location[0], location[1]], 11);
 
     L.marker([location[0], location[1]]).addTo(macarte);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
@@ -71,45 +72,15 @@ function updateTableElement(id, fields, value) {
     // Update element status
     list.forEach(package => {
         if (package._id === id) {
+            if(fields == "status" && value > 0){
+                package.user["manager.name"] = getUserInfo("name") + " " +  getUserInfo("forename");
+            }
             package[fields] = value;
         }
     });
 
     // Redraw table
     fillTable(true);
-}
-
-async function downloadSummary() {
-    let userId = getUserInfo("token").substring(10);
-
-    let rawData = "Date, Owner, Latitude, Longitude, Products";
-
-    for (let i of list) {
-        if (i.user.manager === userId && i.status === 3) {
-            let date = new Date(+i.date.creation).toLocaleString('fr-FR');
-
-            rawData += date + "," + i.user["giver.name"] + ",";
-            rawData += i.location + ",";
-
-            for (let packageKey of i.package) {
-                const productName = await getProductName(packageKey);
-                rawData += productName + "; ";
-            }
-
-            rawData += "\n";
-        }
-    }
-
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(rawData));
-    element.setAttribute('download', "summary.csv");
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
 }
 
 function fillTable(clear) {
@@ -122,7 +93,6 @@ function fillTable(clear) {
     let counter = 1;
 
     list.forEach(package => {
-        console.log(package);
         let packageId = package._id;
         let dateobj = new Date(+package.date.creation).toLocaleString('fr-FR');
 
