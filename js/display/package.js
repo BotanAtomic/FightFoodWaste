@@ -64,6 +64,39 @@ async function addPackageList(id, package) {
     });
 }
 
+async function downloadSummary() {
+    let userId = getUserInfo("token").substring(10);
+
+    let rawData = "Date, Owner, Latitude, Longitude, Products";
+
+    for (let i of list) {
+        if (i.user.manager === userId && i.status === 3) {
+            let date = new Date(+i.date.creation).toLocaleString('fr-FR');
+
+            rawData += date + "," + i.user["giver.name"] + ",";
+            rawData += i.location + ",";
+
+            for (let packageKey of i.package) {
+                const productName = await getProductName(packageKey);
+                rawData += productName + "; ";
+            }
+
+            rawData += "\n";
+        }
+    }
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(rawData));
+    element.setAttribute('download', "summary.csv");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
 function updatePackage(status, id) {
     updatePackageRequest(getUserInfo("token"), id, status, onPackageUpdateSuccess, onPackageUpdateFailed);
 }
